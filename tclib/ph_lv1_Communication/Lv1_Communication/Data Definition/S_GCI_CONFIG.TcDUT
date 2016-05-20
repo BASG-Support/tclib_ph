@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="S_GCI_CONFIG" Id="{f0ac82c2-e1ef-4b1a-84ea-73dbd52e7776}">
+    <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	GENERIC COMMUNICATION CONFIGURATION 
+*)
+TYPE S_GCI_CONFIG :
+STRUCT
+	//25 byte data for storing communication address, and/or additional configurations
+		Comm_Handle	: T_COMMHANDLE;
+	//Generic data pointer to communication data buffer
+		P_Data		: PVOID;
+	//Communication data size
+		Data_Size	: UDINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

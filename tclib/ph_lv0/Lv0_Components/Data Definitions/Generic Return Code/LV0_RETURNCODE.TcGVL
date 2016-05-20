@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <GVL Name="LV0_RETURNCODE" Id="{752c615c-a852-4a02-9edf-a7d7e4d45038}">
+    <Declaration><![CDATA[(*
+	Y:2016	M:0005	D:0011
+	Library conventions:
+	Values less than 0 represent success/success code 
+	Values equal to 0 represent a busy return code
+	Values more than 0 represent error/error codes 
+*)
+{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	RETURN_SUCCESS 	: RETURN_CODE := -1;
+	RETURN_BUSY		: RETURN_CODE := 0;
+	RETURN_ERROR	: RETURN_CODE := 1;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

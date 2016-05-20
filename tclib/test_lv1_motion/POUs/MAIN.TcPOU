@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="MAIN" Id="{a8330ba6-5d0d-42d4-bc82-e35dd0c7b25b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	c_actuator : C_ACTUATION;
+	State : INT := -10;
+	TestVelocity	: LREAL := 100;
+	TestPosition 	: LREAL := 300;
+	TestDistance 	: LREAL := 300;
+	_currentPosition: LREAL;
+	_c_actuation_test_ok : BOOL := FALSE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE State OF
+0:
+	_c_actuation_test_ok := FALSE;
+	State := State + 1;
+1:
+	//Enable property check
+	c_actuator.Enable := TRUE;
+	c_actuator.Enable_Fw := TRUE;
+	c_actuator.Enable_Bw := TRUE;
+	c_actuator.Controller_Override := 100.0;
+	IF NOT c_actuator.Is_Disabled THEN
+		State := State + 1;
+	END_IF
+2:
+	//Disable method check	
+	IF c_actuator.Disable() < 0 THEN
+		State := State + 1;
+	END_IF
+3: 
+	//Is_Disable property check
+	IF c_actuator.Is_Disabled THEN
+		State := State + 1;
+	END_IF
+4: 
+	//Enable_all method check
+	IF c_actuator.Enable_All() < 0 THEN
+		State := State + 1;
+	END_IF
+5: 
+	//Is_Disabled confirmation check
+	IF NOT c_actuator.Is_Disabled THEN
+		State := State + 1;
+	END_IF
+6: 
+	//Move_to method check
+	c_actuator.Velocity := TestVelocity;
+	IF c_actuator.Move_To(TestPosition) < 0 THEN
+		State := State + 1;
+	END_IF
+7: 
+	//Current_position property check and confirmation
+	_currentPosition := c_actuator.Current_Position;
+	IF ABS(_currentPosition - TestPosition) < 0.01 THEN
+		State := State + 1;
+	END_IF
+8:
+	//Move_by method check
+	IF c_actuator.Move_By(TestPosition) < 0 THEN
+		State := State + 1;
+	END_IF
+9:
+	//Current_position confirmation
+	IF ABS(c_actuator.Current_Position - (_currentPosition + TestDistance)) < 0.01 THEN
+		State := State + 1;
+	END_IF
+10: 
+	//Move_along(plus) method check
+	IF c_actuator.Move_Along(TRUE) < 0 THEN
+		State := State + 1;
+	END_IF
+11:
+	//current_velocity property check and confirmation
+	IF ABS(c_actuator.Current_Velocity - TestVelocity) < 0.1 THEN
+		State := State + 1;
+	END_IF
+12:
+	//Is_moving property check and confirmation
+	IF c_actuator.Is_Moving THEN
+		State := State + 1;
+	END_IF
+13: 
+	//current_velocity confirmation
+	IF ABS(c_actuator.Current_Velocity - TestVelocity) < 0.01 THEN
+		State := State + 1;
+	END_IF 
+14:
+	//halt method check
+	IF c_actuator.Halt() < 0 THEN
+		State := State + 1;
+	END_IF
+15:
+	//is_moving confirmation
+	IF NOT c_actuator.Is_Moving THEN
+		State := State + 1;
+	END_IF
+16:
+	//move_along(minus) method check
+	IF c_actuator.Move_Along(FALSE) < 0 THEN
+		State := State + 1;
+	END_IF
+17:
+	//is_moving confirmation
+	IF c_actuator.Is_Moving THEN
+		State := State + 1;
+	END_IF
+18:
+	//actuation stop
+	IF c_actuator.Halt() < 0 THEN
+		State := State + 1;
+	END_IF
+19:	
+	//is_moving confirmation
+	IF NOT c_actuator.Is_Moving THEN
+		State := State + 1;
+	END_IF
+20:
+	//begin_jog(plus) method check
+	IF c_actuator.Begin_Jog(TRUE) < 0 THEN
+		State := State + 1;		
+	END_IF
+21:
+	//is_moving confirmation
+	IF c_actuator.Is_Moving THEN
+		State := State + 1;
+	END_IF
+22:
+	//end_jog method check
+	IF c_actuator.End_Jog() < 0 THEN
+		State := State + 1;
+	END_IF
+23:
+	//is_moving confirmation
+	IF NOT c_actuator.Is_Moving THEN
+		State := State + 1;
+	END_IF
+24:
+	//begin_jog(minus) method check
+	IF c_actuator.Begin_Jog(FALSE) < 0 THEN
+		State := State + 1;		
+	END_IF
+25:
+	//is_moving confirmation
+	IF c_actuator.Is_Moving THEN
+		State := State + 1;
+	END_IF
+26:
+	//reset method check
+	IF c_actuator.Reset() < 0 THEN
+		State := State + 1;
+	END_IF
+27:
+	//is_moving confirmation
+	IF NOT c_actuator.Is_Moving THEN
+		State := State + 1;
+	END_IF
+28:
+	//home method + calibration sensor check
+	//please manually trigger the signal
+	c_actuator.Home_To_Limit := FALSE;
+	c_actuator.Calibrate_At_Minus := FALSE;
+	IF c_actuator.Home() < 0 THEN
+		State := State + 1;
+	END_IF
+29: 
+	//Current_position confirmation
+	IF c_actuator.Current_Position < 10.0 THEN
+		State := State + 1;
+	END_IF
+30:
+	//home method + calibrate at minus limit check
+	//please manually trigger the signal
+	c_actuator.Home_To_Limit := TRUE;
+	c_actuator.Calibrate_At_Minus := TRUE;
+	IF c_actuator.Home() < 0 THEN
+		State := State + 1;
+	END_IF
+31: 
+	//Current_position confirmation
+	IF c_actuator.Current_Position < 10.0 THEN
+		State := State + 1;
+	END_IF
+32:
+	//home method + calibrate at plus limit check
+	//please manually trigger the signal
+	c_actuator.Home_To_Limit := TRUE;
+	c_actuator.Calibrate_At_Minus := FALSE;
+	IF c_actuator.Home() < 0 THEN
+		State := State + 1;
+	END_IF
+33: 
+	//Current_position confirmation
+	IF c_actuator.Current_Position < 10.0 THEN
+		State := State + 1;
+	END_IF
+34:
+	//start endless movement
+	IF c_actuator.Move_Along(TRUE) < 0 THEN
+		State := State + 1;
+	END_IF
+35: 
+	//sudden disable + error generation
+	IF c_actuator.Disable() < 0 THEN
+		State := State + 1;
+	END_IF
+36:
+	//is_error property check
+	IF c_actuator.Is_Error THEN
+		State := State + 1;
+	END_IF
+37: 
+	//reset
+	IF c_actuator.Reset() < 0 THEN
+		State := State + 1;
+	END_IF
+38:
+	//is_error and is_disable confirmation
+	IF NOT c_actuator.Is_Error AND c_actuator.Is_Disabled THEN
+		State := State + 1;
+	END_IF
+39:
+	_c_actuation_test_ok := TRUE;
+	State := -10;
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

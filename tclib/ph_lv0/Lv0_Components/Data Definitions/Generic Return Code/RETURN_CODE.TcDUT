@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="RETURN_CODE" Id="{c20008ab-68e0-4623-b4cc-5e78ffffe97f}">
+    <Declaration><![CDATA[TYPE RETURN_CODE : DINT; END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

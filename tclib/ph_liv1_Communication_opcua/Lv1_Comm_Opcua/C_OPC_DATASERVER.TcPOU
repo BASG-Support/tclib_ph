@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_OPC_DATASERVER" Id="{ae7a5025-3260-40cc-b34b-87e35582ff8e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_OPC_DATASERVER
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	{attribute 'OPC.UA.DA' := '1'}
+	DATA_BOOL : ARRAY[0..CONFIG_OPC_SERVER.OPC_BOOL_DATA_SIZE] OF BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	DATA_SINT : ARRAY[0..CONFIG_OPC_SERVER.OPC_SINT_DATA_SIZE] OF SINT;
+	{attribute 'OPC.UA.DA' := '1'}
+	DATA_DINT : ARRAY[0..CONFIG_OPC_SERVER.OPC_DINT_DATA_SIZE] OF DINT;
+	{attribute 'OPC.UA.DA' := '1'}
+	DATA_LREAL : ARRAY[0..CONFIG_OPC_SERVER.OPC_LREAL_DATA_SIZE] OF LREAL;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

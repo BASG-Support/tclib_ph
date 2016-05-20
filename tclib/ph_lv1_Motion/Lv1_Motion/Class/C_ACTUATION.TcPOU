@@ -1,0 +1,679 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_ACTUATION" Id="{83f3e86f-be0c-497d-a38a-fa44c7f08578}" SpecialFunc="None">
+    <Declaration><![CDATA[(*
+	Y:2016		M:05		D:20
+	T:CLASS		N:ACTUATION
+	D:Class object for plc motion projects. Contains all basic necessary methods for movement. The default behavior is to home to negative limit.
+*)
+FUNCTION_BLOCK C_ACTUATION IMPLEMENTS IFC_ACTUATION
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	//SOFTWARAE PDO LINK
+		_AXIS : AXIS_REF;	
+	//HARDWARE PDO LINK
+		_HARDWARE_LINK	AT %I*	: S_ACTUATION_LINK;
+	//MOTION MODULES
+		_M_POWER 	: MC_POWER;
+		_M_RESET 	: MC_RESET;
+		_M_MOVEA 	: MC_MOVEABSOLUTE;
+		_M_MOVER 	: MC_MOVERELATIVE;
+		_M_HOME		: MC_HOME;
+		_M_HALT		: MC_HALT;
+		_M_MOVEEL	: MC_MoveVelocity;
+		_M_JOG		: MC_JOG;
+	//DYNAMICS
+		_VELOCITY 		: LREAL := 10;
+		_ACCELERATION 	: LREAL := 0;
+		_DECELERATION 	: LREAL := 0;
+		_JERK 			: LREAL := 0;
+	//
+		_HOME_TO_LIMIT	: BOOL := TRUE;
+		_HOME_TO_MINUS	: BOOL := TRUE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{32b09048-b456-4aae-ad9c-068f4720cf1b}" />
+    <Folder Name="Properties" Id="{1891f1fa-22fa-4d5e-8a7f-d5840a4fc21c}">
+      <Folder Name="Controller" Id="{312e3ae2-5863-4199-a6fe-03002c56851c}" />
+      <Folder Name="Dynamics" Id="{4975a994-c896-4e12-8529-9899752d7fc2}" />
+      <Folder Name="Homing" Id="{16ad5dfa-0933-4c7f-878d-1b10528a4e7d}" />
+    </Folder>
+    <Property Name="Acceleration" Id="{766c15d0-5368-4284-806f-f4f7f73a22b7}" FolderPath="Properties\Dynamics\">
+      <Declaration><![CDATA[PROPERTY Acceleration : LREAL]]></Declaration>
+      <Get Name="Get" Id="{f487ea0f-0bb8-4560-8485-f6c984cdb151}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Acceleration := _ACCELERATION;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{6b1a6396-eda5-440a-9110-bcf3f6af2cb6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_ACCELERATION := ABS(Acceleration);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Axis_Id" Id="{37cbfef8-fe07-41b8-8fc3-3e990ff03dcc}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Axis_Id : UDINT]]></Declaration>
+      <Get Name="Get" Id="{acc1ba19-22d8-408f-989f-3ddc64f9e0d0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Axis_Id := _AXIS.NcToPlc.AxisId;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Begin_Jog" Id="{99d86675-ca22-48ea-8669-b23f7f6dc9a8}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Initiates the manual motion of the actuation device. Keep the method running for as long as manual motion is required. Terminate manual motion by calling the opposite method.
+*)
+METHOD Begin_Jog : RETURN_CODE
+VAR_INPUT
+	Towards_Positive : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_M_JOG(
+	Axis:= _AXIS, 
+	JogForward:= Towards_Positive, 
+	JogBackwards:= NOT Towards_Positive, 
+	Mode:= MC_JOGMODE_CONTINOUS, 
+	Velocity:= _VELOCITY, 
+	Acceleration:= _ACCELERATION, 
+	Deceleration:= _DECELERATION, 
+	Jerk:= _JERK);
+IF _M_JOG.Error THEN
+	Begin_Jog := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_JOG.CommandAborted THEN
+	Begin_Jog := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSIF _M_JOG.Active THEN
+	Begin_Jog := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Begin_Jog := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Calibrate_At_Minus" Id="{36b321f4-42eb-492f-85cf-c08db2d1b7ed}" FolderPath="Properties\Homing\">
+      <Declaration><![CDATA[PROPERTY Calibrate_At_Minus : BOOL]]></Declaration>
+      <Get Name="Get" Id="{deb4dce4-5e6d-467a-a57a-d275787dd0cf}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Calibrate_At_Minus := _HOME_TO_MINUS;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{574d8419-02a3-4d68-aa64-b73f65dd28ee}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_HOME_TO_MINUS := Calibrate_At_Minus;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Controller_Override" Id="{f5045352-d66c-4519-b7ec-4f32ff813d39}" FolderPath="Properties\Controller\">
+      <Declaration><![CDATA[PROPERTY Controller_Override : LREAL]]></Declaration>
+      <Get Name="Get" Id="{287e8122-8b2b-4fba-8a7f-3076ac6f807e}">
+        <Declaration><![CDATA[VAR
+	_FACTOR : LREAL := 1000000;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Controller_Override := (_AXIS.PlcToNc.Override / _FACTOR) * 100.0;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{1eedf1bb-e0ad-42ec-a5c5-e50ae5cfa26a}">
+        <Declaration><![CDATA[VAR
+	_BUFFER : LREAL;
+	_FACTOR : LREAL := 1000000;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF Controller_Override > 100.0 THEN
+	_BUFFER := 100.0;
+ELSIF Controller_Override < 0.0 THEN 
+	_BUFFER := 0.0;
+ELSE 
+	_BUFFER := Controller_Override;
+END_IF
+_AXIS.PlcToNc.Override := LREAL_TO_UDINT((_BUFFER/100.0) * _FACTOR);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Current_Position" Id="{1ddbb903-57f1-4831-973c-fb717329ac5a}" FolderPath="Properties\Dynamics\">
+      <Declaration><![CDATA[PROPERTY Current_Position : LREAL]]></Declaration>
+      <Get Name="Get" Id="{8b5509f0-54cc-465c-a8a3-b5b13e27693a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Current_Position := _AXIS.NcToPlc.ActPos;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Current_Velocity" Id="{bf4bdbd9-2607-4253-b44c-6a2493f95cbf}" FolderPath="Properties\Dynamics\">
+      <Declaration><![CDATA[PROPERTY Current_Velocity : LREAL]]></Declaration>
+      <Get Name="Get" Id="{47e843a4-3705-4c80-a538-4b4c70706d6b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Current_Velocity := _AXIS.NcToPlc.ActVelo;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Deceleration" Id="{8ebd77de-4754-421d-9393-b342d9b5b3ad}" FolderPath="Properties\Dynamics\">
+      <Declaration><![CDATA[PROPERTY Deceleration : LREAL]]></Declaration>
+      <Get Name="Get" Id="{9c7f8825-8b20-49f5-b963-1c3067dcb686}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Deceleration := _DECELERATION;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{6259e86e-2e94-4099-b6c8-407665fb7132}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_DECELERATION := ABS(Deceleration);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Disable" Id="{bf40c47c-c625-42df-a296-9bc2e83d5439}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Sets the actuation device in a de-energised state, and disable travel on both directions.
+*)
+METHOD Disable : RETURN_CODE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_M_POWER(
+	Axis:= _AXIS, 
+	Enable:= FALSE, 
+	Enable_Positive:= FALSE, 
+	Enable_Negative:= FALSE, 
+	Override:= 0 );
+
+IF _M_POWER.Error THEN
+	Disable := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF NOT _M_POWER.Status THEN
+	Disable := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Disable := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Enable" Id="{292df30b-f03c-441b-aa89-a6fae23242ac}" FolderPath="Properties\Controller\">
+      <Declaration><![CDATA[PROPERTY Enable : BOOL]]></Declaration>
+      <Get Name="Get" Id="{d6555143-7845-4296-af01-08ddad4d6169}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Enable := _AXIS.PlcToNc.ControlDWord.0;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{e6ca2895-b1e4-46c4-98b8-b85be7f723ee}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AXIS.PlcToNc.ControlDWord.0 := Enable;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Enable_All" Id="{f85dc8ab-b4e8-4830-8788-24c91e1dea5b}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Sets the actuation device in a energised state, and enable travel on both directions.
+*)
+METHOD Enable_All : RETURN_CODE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_M_POWER(
+	Axis:= _AXIS, 
+	Enable:= TRUE, 
+	Enable_Positive:= TRUE, 
+	Enable_Negative:= TRUE, 
+	Override:= 100 );
+
+IF _M_POWER.Error THEN
+	Enable_All := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_POWER.Status THEN
+	Enable_All := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Enable_All := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Enable_Bw" Id="{d261c229-c9a9-4d0a-a22f-f1f7c283617e}" FolderPath="Properties\Controller\">
+      <Declaration><![CDATA[PROPERTY Enable_Bw : BOOL]]></Declaration>
+      <Get Name="Get" Id="{0ed1b29c-9fe6-43e6-a95a-d2069a2f6fac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Enable_Bw := _AXIS.PlcToNc.ControlDWord.2;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{29460b4a-c5a8-4196-8aa6-13f60da80e0a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AXIS.PlcToNc.ControlDWord.2 := Enable_Bw;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Enable_Fw" Id="{8457393a-2e3f-428e-85cf-da22be2a78f9}" FolderPath="Properties\Controller\">
+      <Declaration><![CDATA[PROPERTY Enable_Fw : BOOL]]></Declaration>
+      <Get Name="Get" Id="{32767227-f6d8-4be8-9447-fd929e52ec3b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Enable_Fw := _AXIS.PlcToNc.ControlDWord.1;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{d44aa829-0e64-405e-a7c7-f46f045f2159}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AXIS.PlcToNc.ControlDWord.1 := Enable_Fw;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="End_Jog" Id="{456f0679-029d-48cc-b362-0853c2bc91b0}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Terminates the manual motion of the actuation device.
+*)
+METHOD End_Jog : RETURN_CODE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_M_JOG(
+	Axis:= _AXIS, 
+	JogForward:= FALSE, 
+	JogBackwards:= FALSE);
+IF _M_JOG.Error THEN
+	End_Jog := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_JOG.CommandAborted THEN
+	End_Jog := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSIF _M_JOG.Done THEN
+	End_Jog := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	End_Jog := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Halt" Id="{e681ead0-f649-4309-84c7-e94ddaede669}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Halts the actuation device.
+*)
+METHOD Halt : RETURN_CODE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_M_HALT(
+	Axis:= _AXIS, 
+	Execute:= TRUE, 
+	Deceleration:= _DECELERATION, 
+	Jerk:= _JERK);
+IF _M_HALT.Error THEN
+	_M_HALT(
+		Axis:=_AXIS,
+		Execute:=FALSE);
+	Halt:=ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_HALT.CommandAborted THEN
+	_M_HALT(
+		Axis:=_AXIS,
+		Execute:=FALSE);
+	Halt:=ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSIF _M_HALT.Done THEN
+	_M_HALT(
+		Axis:=_AXIS,
+		Execute:=FALSE);
+	Halt:=ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Halt:=ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Home" Id="{3e135933-1535-417b-aa68-ecdb3a94c5bf}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Initiates the homing sequence for the actuation device. Configure the homing behavior via the class's properties.
+*)
+METHOD Home : RETURN_CODE
+VAR_INPUT
+END_VAR
+VAR
+	_CALIBRATION_FLAG : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _HOME_TO_LIMIT THEN
+	IF _HOME_TO_MINUS THEN
+		_CALIBRATION_FLAG := THIS^._HARDWARE_LINK.LIMIT_MINUS;
+	ELSE
+		_CALIBRATION_FLAG := THIS^._HARDWARE_LINK.LIMIT_PLUS;
+	END_IF
+ELSE
+	_CALIBRATION_FLAG := THIS^._HARDWARE_LINK.CALIBRATION_SENSOR;
+END_IF
+_M_HOME(
+	Axis:= _AXIS, 
+	Execute:= TRUE, 
+	bCalibrationCam:= _CALIBRATION_FLAG);
+IF _M_HOME.Error THEN
+	_M_HOME(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Home := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_HOME.CommandAborted THEN
+	_M_HOME(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Home := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSIF _M_HOME.Done THEN
+	_M_HOME(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Home := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Home := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Home_To_Limit" Id="{7e36d8e8-d8ad-4120-bd79-bc33060a6f6e}" FolderPath="Properties\Homing\">
+      <Declaration><![CDATA[PROPERTY Home_To_Limit : BOOL]]></Declaration>
+      <Get Name="Get" Id="{975846b4-12ec-4219-bd17-511ae8fd0cfa}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Home_To_Limit := _HOME_TO_LIMIT;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{710a344d-c4bf-4df3-b931-32391718ecba}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_HOME_TO_LIMIT := Home_To_Limit;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Is_Disabled" Id="{6cb948c2-0925-49bf-ba77-8ba9b789b9c5}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Is_Disabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{911a38a5-3aac-4a7f-9ee6-be2464d1b4dc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AXIS.ReadStatus();
+Is_Disabled := _AXIS.Status.Disabled;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Is_Error" Id="{cf195f1f-7092-4424-96d9-8b8dfb0e1102}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Is_Error : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c6957a44-7ff1-4cc7-a6da-af2313c6d761}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AXIS.ReadStatus();
+Is_Error := _AXIS.Status.Error;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Is_Moving" Id="{32b5deda-ff00-4478-91ef-a6982b0ef6e5}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Is_Moving : BOOL]]></Declaration>
+      <Get Name="Get" Id="{72a43248-fbbe-48f4-8486-ab42bcf41e98}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AXIS.ReadStatus();
+Is_Moving := _AXIS.Status.Moving;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Jerk" Id="{c7aaad38-3f45-43ed-a4aa-7fd8901c9252}" FolderPath="Properties\Dynamics\">
+      <Declaration><![CDATA[PROPERTY Jerk : LREAL]]></Declaration>
+      <Get Name="Get" Id="{1cca880d-afcb-476c-aafe-7b75fc281469}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Jerk := _JERK;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{cd34d7b7-0cc2-45a6-ab6c-07313a0c7f03}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_JERK := ABS(Jerk);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Move_Along" Id="{6750e6a2-590b-4161-8fa1-a7bbfc697df6}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Sets the actuation in motion along a direction.
+*)
+METHOD Move_Along : RETURN_CODE
+VAR_INPUT
+	Positive_Direction : BOOL;
+END_VAR
+VAR
+	_DIRECTION : MC_Direction;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Positive_Direction THEN
+	_DIRECTION := MC_Direction.MC_Positive_Direction;
+ELSE
+	_DIRECTION := MC_Direction.MC_Negative_Direction;
+END_IF
+_M_MOVEEL(
+	Axis:= _AXIS, 
+	Execute:= TRUE, 
+	Velocity:= _VELOCITY, 
+	Acceleration:= _ACCELERATION, 
+	Deceleration:= _DECELERATION, 
+	Jerk:= _JERK, 
+	Direction:= _DIRECTION);
+IF _M_MOVEEL.Error THEN
+	_M_MOVEEL(
+		Axis:= _AXIS, 
+		Execute:= FALSE); 
+	Move_Along := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_MOVEEL.CommandAborted THEN
+	_M_MOVEEL(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Move_Along := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSIF _M_MOVEEL.InVelocity THEN
+	_M_MOVEEL(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Move_Along := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Move_Along := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Move_By" Id="{c4e1f9db-4b85-411f-bbb2-70a1125f18d5}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Sets the actuation device in motion for a specified distance.
+*)
+METHOD Move_By : RETURN_CODE
+VAR_INPUT
+	//User defined distance to travel. Can be + or -
+		Distance : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_M_MOVER(
+	Axis:= _AXIS, 
+	Execute:= TRUE, 
+	Distance:= Distance, 
+	Velocity:= _VELOCITY, 
+	Acceleration:= _ACCELERATION, 
+	Deceleration:= _DECELERATION, 
+	Jerk:= _JERK);
+	
+IF _M_MOVER.Error THEN
+	_M_MOVER(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Move_By := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_MOVER.CommandAborted THEN
+	_M_MOVER(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Move_By := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSIF _M_MOVER.Done THEN
+	_M_MOVER(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Move_By := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Move_By := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Move_To" Id="{38eb8876-14c2-44cf-8c56-8373ab86f633}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Sets the actuation in motion to the target position.
+*)
+METHOD Move_To : RETURN_CODE
+VAR_INPUT
+	//User defined position to travel. Can be + or -
+		POSITION : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_M_MOVEA(
+	Axis:= _AXIS, 
+	Execute:= TRUE, 
+	Position:= POSITION, 
+	Velocity:= _VELOCITY, 
+	Acceleration:= _ACCELERATION, 
+	Deceleration:= _DECELERATION, 
+	Jerk:= _JERK);
+IF _M_MOVEA.Error THEN
+	_M_MOVEA(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Move_To := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_MOVEA.CommandAborted THEN
+	_M_MOVEA(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Move_To := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSIF _M_MOVEA.Done THEN
+	_M_MOVEA(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Move_To := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Move_To := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{ab02f5c6-41a9-4a70-9fa0-1ef31a9f9e14}" FolderPath="Methods\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05	D:20
+	D: Resets the actuation device of any errors. Actuation device currently in motion will be halted.
+*)
+METHOD Reset : RETURN_CODE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//RESET OTHER FUNCTION BLOCKS
+	_M_MOVEA(
+		Axis:= _AXIS,
+		Execute:= FALSE);
+	_M_MOVER(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	_M_MOVEEL(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	_M_HALT(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	_M_HOME(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+//EXECUTE RESET
+	_M_RESET(
+		Axis:= _AXIS, 
+		Execute:= TRUE);
+	IF _M_RESET.Error THEN
+		_M_RESET(
+			Axis:= _AXIS, 
+			Execute:= FALSE);
+		Reset := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	ELSIF _M_RESET.Done AND NOT _M_RESET.Busy THEN
+		_M_RESET(
+			Axis:= _AXIS, 
+			Execute:= FALSE);
+		Reset := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	ELSE
+		Reset := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;	
+	END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Velocity" Id="{3a21685c-48ac-4651-b2d9-3154fa0dc979}" FolderPath="Properties\Dynamics\">
+      <Declaration><![CDATA[PROPERTY Velocity : LREAL]]></Declaration>
+      <Get Name="Get" Id="{ff37a5a7-94e5-4d5b-a6a1-60a2497a3b8b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Velocity := _VELOCITY;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{44a83974-daa6-4a1e-9e64-a7fb81e312c1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_VELOCITY := ABS(Velocity);]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

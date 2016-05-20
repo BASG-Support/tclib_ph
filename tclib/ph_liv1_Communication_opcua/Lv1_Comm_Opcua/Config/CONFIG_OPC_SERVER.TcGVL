@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <GVL Name="CONFIG_OPC_SERVER" Id="{3818e397-5f56-4591-b9c9-85edeb5b592a}" ParameterList="True">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	OPC_BOOL_DATA_SIZE : INT := 10;
+	OPC_SINT_DATA_SIZE : INT := 10;
+	OPC_DINT_DATA_SIZE : INT := 10;
+	OPC_LREAL_DATA_SIZE : INT := 10;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

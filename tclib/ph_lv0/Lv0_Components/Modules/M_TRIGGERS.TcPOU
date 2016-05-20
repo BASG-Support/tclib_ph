@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="M_TRIGGERS" Id="{8ec5875c-0667-42d3-a84a-aa5d0a22127e}" SpecialFunc="None">
+    <Declaration><![CDATA[(*
+	Y:2016		M:05		D:20
+	T:MODULE	N:TRIGGERS
+	D:Coverts a boolean signal into R/F edge signals
+*)
+FUNCTION_BLOCK M_TRIGGERS
+VAR_INPUT
+	//SIGNAL INPUT
+		BOOL_IN : BOOL;
+END_VAR
+VAR_OUTPUT
+	//SIGNAL RISING EDGE TRIGGER
+		BOOL_R : BOOL;
+	//SIGNAL FALLING EDGE TRIGGER
+		BOOL_F : BOOL;
+	//SIGNAL RISING OR FALLING EDGE TRIGGER
+		BOOL_RF: BOOL;
+END_VAR
+VAR
+	//INTERNAL 
+		_latch : BOOL;
+		//UNUSED
+			//SYSTEM STANDARD FUNCTION BLOCKS
+			//	fb_TrigR : R_TRIG;
+			//	fb_TrigF : F_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF _latch <> BOOL_IN THEN
+	IF NOT _latch THEN
+		BOOL_R	:= TRUE;
+		BOOL_RF := TRUE;
+	ELSE
+		BOOL_F 	:= TRUE;
+		BOOL_RF := TRUE;
+	END_IF
+ELSE
+	BOOL_R 	:= FALSE;
+	BOOL_F 	:= FALSE;
+	BOOL_RF := FALSE;
+END_IF
+_latch := BOOL_IN;
+//Unused
+	////EDGE DETECTION
+	//	fb_TrigR(CLK:= BOOL_IN);
+	//	fb_TrigF(CLK:= BOOL_IN);
+	////ASSIGNMENT
+	//	BOOL_R := fb_TrigR.Q;
+	//	BOOL_F := fb_TrigF.Q;
+	//	BOOL_RF := fb_TrigR.Q OR fb_TrigF.Q;
+	]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

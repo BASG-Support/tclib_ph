@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="S_ACTUATION_LINK" Id="{709e2e31-a131-4259-88c7-e40e6dee6de7}">
+    <Declaration><![CDATA[TYPE S_ACTUATION_LINK :
+STRUCT
+	HARDWARE_ERROR_ID 	: UDINT;
+	CALIBRATION_SENSOR	: BOOL;
+	LIMIT_MINUS 		: BOOL;
+	LIMIT_PLUS			: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

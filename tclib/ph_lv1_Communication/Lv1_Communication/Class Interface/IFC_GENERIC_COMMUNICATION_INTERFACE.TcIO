@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <Itf Name="IFC_GENERIC_COMMUNICATION_INTERFACE" Id="{025bd610-72e5-47fb-8e6c-9d00611370f5}">
+    <Declaration><![CDATA[(*
+	Y:2016	M:05	D:20
+	T:INTERFACE		N:GENERIC COMMUNICATION INTERFACE
+*)
+INTERFACE IFC_GENERIC_COMMUNICATION_INTERFACE
+]]></Declaration>
+    <Method Name="Close_Connection" Id="{f2af6587-9985-4073-a448-95fd488a7b24}">
+      <Declaration><![CDATA[METHOD Close_Connection : RETURN_CODE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Open_Connection" Id="{bd81e16c-fef7-4eee-ac3c-d5841221af71}">
+      <Declaration><![CDATA[METHOD Open_Connection : RETURN_CODE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Read" Id="{19c79a54-9157-436c-801e-b935e8fe99d5}">
+      <Declaration><![CDATA[METHOD Read : RETURN_CODE
+VAR_INPUT
+	Configuration : S_GCI_CONFIG;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Write" Id="{548b3c14-dc8d-4a49-ae41-d0957254011e}">
+      <Declaration><![CDATA[METHOD Write : RETURN_CODE
+VAR_INPUT
+	Configuration : S_GCI_CONFIG;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

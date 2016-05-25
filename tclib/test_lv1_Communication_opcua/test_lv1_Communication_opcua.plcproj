@@ -3,16 +3,16 @@
   <PropertyGroup>
     <FileVersion>1.0.0.0</FileVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{631de151-bc98-4191-bd8e-86cd9c35bbfe}</ProjectGuid>
+    <ProjectGuid>{d023ea59-a734-45a0-9713-35e08940a6b8}</ProjectGuid>
     <SubObjectsSortedByName>True</SubObjectsSortedByName>
-    <Name>test_lv1_motion</Name>
+    <Name>test_lv1_Communication_opcua</Name>
     <ProgramVersion>3.1.4020.1</ProgramVersion>
-    <Application>{09e141ca-5a30-4ed4-b13f-bc14a3a13960}</Application>
-    <TypeSystem>{8917b933-228f-486d-9b5f-f2c3a1dacce5}</TypeSystem>
-    <Implicit_Task_Info>{191b4f2a-db20-4467-8b83-4367907bc1bf}</Implicit_Task_Info>
-    <Implicit_KindOfTask>{e275a0bf-94c6-4041-96cb-267a5e8da025}</Implicit_KindOfTask>
-    <Implicit_Jitter_Distribution>{c2a0158c-943b-48b1-8d51-ab5e76dce2aa}</Implicit_Jitter_Distribution>
-    <LibraryReferences>{2729dc80-fe51-4cf2-b98d-4492b677ec22}</LibraryReferences>
+    <Application>{e677c10e-5115-4119-999b-2ad0b43ec109}</Application>
+    <TypeSystem>{8caab14c-7959-4019-be4a-3e24ce1a6e4c}</TypeSystem>
+    <Implicit_Task_Info>{59b73a29-7637-4493-9d86-04717ac34a55}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{8381978f-c385-4723-a5f7-5a322d6e47b5}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{88245b83-c043-428e-8abb-0a8b00440d05}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{f590f5f9-318f-43ff-9793-0c1c4049d638}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PlcTask.TcTTO">
@@ -23,6 +23,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="DUTs" />
+    <Folder Include="GVLs" />
+    <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>
@@ -38,13 +41,13 @@
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="tclib_ph_lv1_motion">
-      <DefaultResolution>tclib_ph_lv1_motion, * (Poh)</DefaultResolution>
-      <Namespace>ph_lv1_motion</Namespace>
+    <PlaceholderReference Include="tclib_ph_lv1_comm_opcua">
+      <DefaultResolution>tclib_ph_lv1_comm_opcua, * (Poh)</DefaultResolution>
+      <Namespace>ph_lv1_opcua</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test_lv1_motion.tmc">
+    <None Include="test_lv1_Communication_opcua.tmc">
       <SubType>Content</SubType>
     </None>
   </ItemGroup>
@@ -52,8 +55,11 @@
     <PlaceholderResolution Include="tclib_ph_lv0">
       <Resolution>tclib_ph_lv0, 0.1.1.0 (Poh)</Resolution>
     </PlaceholderResolution>
-    <PlaceholderResolution Include="tclib_ph_lv1_motion">
-      <Resolution>tclib_ph_lv1_motion, * (Poh)</Resolution>
+    <PlaceholderResolution Include="tclib_ph_lv1_comm_opcua">
+      <Resolution>tclib_ph_lv1_comm_opcua, * (Poh)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="tclib_ph_lv1_generic_communication_interface">
+      <Resolution>tclib_ph_lv1_generic_communication_interface, 0.1.1.0 (Poh)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>
@@ -80,12 +86,6 @@
               <d n="Values" t="Hashtable" />
             </o>
           </d>
-          <d n="Values" t="Hashtable" />
-        </o>
-        <v>{8F99A816-E488-41E4-9FA3-846536012284}</v>
-        <o>
-          <v n="Name">"{8F99A816-E488-41E4-9FA3-846536012284}"</v>
-          <d n="SubKeys" t="Hashtable" />
           <d n="Values" t="Hashtable" />
         </o>
         <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>

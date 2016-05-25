@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_HTTP_VERSION" Id="{f84bd680-1ef6-48ad-b83c-ad141d3ed4e4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_HTTP_VERSION
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_Major : UINT := 1;
+	_Minor : UINT := 0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{c34adc51-ee09-4037-b9e3-e4f48daea1dd}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Major_Version : UINT;
+	Minor_Version : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Major := Major_Version;
+Minor := Minor_Version;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Major" Id="{4b3fdcf0-e75c-4024-9e78-be75f2091c1e}">
+      <Declaration><![CDATA[PROPERTY Major : uint]]></Declaration>
+      <Get Name="Get" Id="{ada1b26a-df10-46b8-8f9e-da84dce5f37a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Major := _Major;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b6631c3e-e518-4bd4-9b3e-5412be468414}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Major := Major;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Minor" Id="{57502e27-2b87-4f07-b621-01f773a33730}">
+      <Declaration><![CDATA[PROPERTY Minor : uint]]></Declaration>
+      <Get Name="Get" Id="{e07d06e8-548f-488c-8910-2e3de44228c4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Minor := _Minor;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5e716222-489c-471d-b81a-506b30d80786}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Minor := Minor;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="ToString" Id="{3fb1ece0-cd07-4895-a40e-68d34fc17c52}">
+      <Declaration><![CDATA[METHOD ToString : String(255)
+VAR_INPUT
+END_VAR
+VAR
+	_head 	: STRING(5) := 'HTML/';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ToString := CONCAT(_head, CONCAT(UINT_TO_STRING(_Major), CONCAT('.',UINT_TO_STRING(_Minor))));]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_HTTP_REQUEST_HEADER" Id="{783d10b1-2eb7-48f1-81fc-4d9dfeed02e5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_HTTP_REQUEST_HEADER
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    _AcceptCharset 		: STRING(255);
+    _AcceptEncoding 	: STRING(255);
+    _AcceptLanguage 	: STRING(255);
+    _Authorization 		: STRING(255);
+    _Expect 			: STRING(255);
+    _From 				: STRING(255);
+    _Host 				: STRING(255);
+    _IfMatch 			: STRING(255);
+    _IfModifiedSince	: STRING(255);
+    _IfNoneMatch 		: STRING(255);
+    _IfRange 			: STRING(255);
+    _IfUnmodifiedSince	: STRING(255);
+    _MaxForwards 		: STRING(255);
+    _ProxyAuthorization : STRING(255);
+    _Range 				: STRING(255);
+    _Referer 			: STRING(255);
+    _Te 				: STRING(255);
+    _UserAgent 			: STRING(255);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="Accept_Charset" Id="{dc5d6106-f331-496e-a732-1611a2520048}">
+      <Declaration><![CDATA[PROPERTY Accept_Charset : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{740697d5-758d-49fc-8ed1-98331d6f6050}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Accept_Charset := _AcceptCharset;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{da090a2f-ed69-44c3-8f9b-cdf753a502c6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AcceptCharset := Accept_Charset;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Accept_Encoding" Id="{c3592128-7744-4731-9e5d-075c6a80ee4c}">
+      <Declaration><![CDATA[PROPERTY Accept_Encoding : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{3aef69ac-6e48-4589-9d90-16243454d9fe}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Accept_Encoding := _AcceptEncoding;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{adc0e6cf-5c14-4c91-8707-1c80216fe882}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AcceptEncoding := Accept_Encoding;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Accept_Language" Id="{589cd509-0907-4b8e-898f-fc7282ed4796}">
+      <Declaration><![CDATA[PROPERTY Accept_Language : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{1f1d7c25-e5b4-4f71-8f14-8a400c02caab}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Accept_Language := _AcceptLanguage;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a0afa876-b812-4e15-84ef-49744bd2b87e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_AcceptLanguage := Accept_Language;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Authorization" Id="{91190e6b-d4b0-4f2f-bfa8-a1cea23795c1}">
+      <Declaration><![CDATA[PROPERTY Authorization : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{6bbf1bf4-8277-4122-9d6c-88ee80cc7581}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Authorization := _Authorization;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{594f1221-b30b-4e84-8a19-c09d479490a1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Authorization := Authorization;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Expect" Id="{72899672-a0d1-4676-81a6-98e2139e6294}">
+      <Declaration><![CDATA[PROPERTY Expect : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{103b1501-6037-45b7-bd41-08be7475cb4f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Expect := _Expect;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{4045fe2a-1d72-4368-bb26-81ba56941736}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Expect := Expect;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="From_header" Id="{364b9220-2b59-4525-abca-c1d2646ac00c}">
+      <Declaration><![CDATA[PROPERTY From_header : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{588af43c-8361-4f80-9bab-0325165fb6f4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[From_header := _from;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{78ee45ad-050f-46c7-a8f4-b0413db00736}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_From := From_header;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Host" Id="{e11990c2-87c6-4ab1-a00f-d9b0748e8732}">
+      <Declaration><![CDATA[PROPERTY Host : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{0b834c9c-aebb-4767-a696-6d892a43d532}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Host := _Host;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{272cb33a-62b9-45d6-ae66-925d331e8d3e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Host := Host;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="If_Match" Id="{74d03699-a6af-436d-88b3-5f800c9d883b}">
+      <Declaration><![CDATA[PROPERTY If_Match : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{4f53c4a1-95cc-48b4-bc2b-613ecab807ba}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[If_Match := _IfMatch;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{44e360e0-196d-4485-a6f2-2bbed82f70f8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_IfMatch := If_Match;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="If_Modified_Since" Id="{d4846413-d636-4d6f-8f2f-0df94b7840c6}">
+      <Declaration><![CDATA[PROPERTY If_Modified_Since : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{1e2c8ce3-0035-47e6-b00e-a0b79a30fdc5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[If_Modified_Since := _IfModifiedSince;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{661cdd79-65b1-4044-a009-d347d5152c8e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_IfModifiedSince := If_Modified_Since;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="If_None_Match" Id="{94135b14-662c-4cac-a3ee-a894e846fd3b}">
+      <Declaration><![CDATA[PROPERTY If_None_Match : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{a44f95d7-6e18-45bc-8e5f-3a91ccbade5e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[If_None_Match := _IfNoneMatch;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ec331bc2-5522-4441-9527-c2dbe4432b60}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_IfNoneMatch := If_None_Match;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="If_Range" Id="{5a7cae34-4462-4af9-bd6b-7a218e30331e}">
+      <Declaration><![CDATA[PROPERTY If_Range : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{c1c5fa1c-05e1-48dc-a614-96db2eb92bbe}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[If_Range := _IfRange;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{a19772d4-2803-48d6-8c5a-e8d0dbf75870}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_IfRange := If_Range;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="If_Unmodified_Since" Id="{058ec8c6-6b2e-4d00-b1fc-3c74bcfb6ef8}">
+      <Declaration><![CDATA[PROPERTY If_Unmodified_Since : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{52522a3f-cb40-4aa0-837a-d19d1a7aced7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[If_Unmodified_Since := _IfUnmodifiedSince;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{13790a41-e4e5-4f42-a3ae-99df427bdf8b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_IfUnmodifiedSince := If_Unmodified_Since;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Max_Forwards" Id="{7b7b4f45-1e8d-4713-8bc4-c66c7b9d4590}">
+      <Declaration><![CDATA[PROPERTY Max_Forwards : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{6b52cdf8-5726-4ab6-9230-b8f4280e2fe4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Max_Forwards := _MaxForwards;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{14386f06-3a05-47ab-945a-fb7c3f350225}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_MaxForwards := Max_Forwards;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Proxy_Authorization" Id="{f0129e65-2025-4941-a9ee-cdd18f4d6a05}">
+      <Declaration><![CDATA[PROPERTY Proxy_Authorization : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{b778d0d5-da56-422e-91d4-a6ecc1129e45}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Proxy_Authorization := _ProxyAuthorization;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{886498f3-25c1-41a9-bebd-cb60a99c88a9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_ProxyAuthoriszation := Proxy_Authorization;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Range" Id="{ef0c61a0-ec99-4469-9b45-392662ec0f00}">
+      <Declaration><![CDATA[PROPERTY Range : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{793b8fc4-b825-490f-8265-597157fd8677}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Range := _Range;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{e67c1dc4-8cba-47e4-b7b3-9a3e59e97039}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Range := Range;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Referer" Id="{18cb258e-0612-498b-9f9c-bf476ab08f44}">
+      <Declaration><![CDATA[PROPERTY Referer : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{f3086b3c-a517-4e4b-9e9a-bd60eb7f2bf2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Referer := _Referer;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2e3d3432-92e0-4815-8f13-130a81adaf86}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Referer := Referer;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TE" Id="{7017d1a1-e348-4f5b-a6e4-cc5f6a208959}">
+      <Declaration><![CDATA[PROPERTY TE : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{747ab826-f271-43f2-9824-3b7130770d88}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Te := _te;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8017d6ed-570b-4a48-a990-9685d9f6127f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Te := Te;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="ToString" Id="{d82e8858-88a6-4756-93fd-b0cf2214a8d3}">
+      <Declaration><![CDATA[METHOD ToString : STRING(LV2_HTTP_DATA_DEFINITIONS.MAX_STRING_LENGTH)
+VAR_INPUT
+	_buffer : STRING(LV2_HTTP_DATA_DEFINITIONS.MAX_STRING_LENGTH);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="User_Agent" Id="{330761f7-8288-4265-a420-858ba417a592}">
+      <Declaration><![CDATA[PROPERTY User_Agent : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{da230d88-7d52-46f7-b4ef-047f711a68e8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[User_Agent := _UserAgent;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5d24989e-e13b-49f0-b39d-58d68a2e4fa3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_UserAgent := User_Agent;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

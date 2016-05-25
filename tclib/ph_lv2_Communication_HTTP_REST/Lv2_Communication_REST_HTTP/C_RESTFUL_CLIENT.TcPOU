@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_RESTFUL_CLIENT" Id="{4563b6e5-238a-4d52-b7b2-2e9aa16a0d74}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_RESTFUL_CLIENT
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_ifc_Communication 	: IFC_GENERIC_COMMUNICATION_INTERFACE;
+	_c_HttpRequest		: C_HTTP_REQUEST;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

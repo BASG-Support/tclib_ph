@@ -1291,31 +1291,31 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{EC05B437-A522-476B-A401-81D868D1B2A2}" Namespace="PH_LV1" AutoDeleteType="true">S_ACTUATION_LINK</Name>
+			<Name GUID="{FE457984-F3D6-4FC8-B975-5251353CCCE4}" Namespace="PH_LV1_MOTION" AutoDeleteType="true">S_ACTUATION_LINK</Name>
 			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>HARDWARE_ERROR_ID</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
 			<SubItem>
 				<Name>CALIBRATION_SENSOR</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>0</BitOffs>
+				<BitOffs>32</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>LIMIT_MINUS</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>8</BitOffs>
+				<BitOffs>40</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>LIMIT_PLUS</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>16</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>HARDWARE_ERROR_ID</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
-				<BitSize>32</BitSize>
-				<BitOffs>32</BitOffs>
+				<BitOffs>48</BitOffs>
 			</SubItem>
 		</DataType>
 	</DataTypes>
@@ -1653,7 +1653,7 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>MAIN.c_actuator._HARDWARE_LINK</Name>
-							<Type GUID="{EC05B437-A522-476B-A401-81D868D1B2A2}" Namespace="PH_LV1">S_ACTUATION_LINK</Type>
+							<Type GUID="{FE457984-F3D6-4FC8-B975-5251353CCCE4}" Namespace="PH_LV1_MOTION">S_ACTUATION_LINK</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
@@ -1668,10 +1668,31 @@ External Setpoint Generation:
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<Project Disabled="true" GUID="{3CA22D6F-3569-478F-8ECD-7CCFDF9AB6C6}" Name="ph_liv1_Communication_opcua" PrjFilePath="ph_liv1_Communication_opcua\ph_liv1_Communication_opcua.plcproj" TmcFilePath="ph_liv1_Communication_opcua\ph_liv1_Communication_opcua.tmc" ReloadTmc="true" AmsPort="854" FileArchiveSettings="#x000e">
+			<Project Disabled="true" GUID="{3CA22D6F-3569-478F-8ECD-7CCFDF9AB6C6}" Name="ph_lv1_Communication_opcua" PrjFilePath="ph_lv1_Communication_opcua\ph_lv1_Communication_opcua.plcProj" TmcFilePath="ph_lv1_Communication_opcua\ph_lv1_Communication_opcua.tmc" ReloadTmc="true" AmsPort="854" FileArchiveSettings="#x000e">
 				<Instance Id="#x01010060" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
-					<Name>ph_liv1_Communication_opcua Instance</Name>
+					<Name>ph_lv1_Communication_opcua Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+				</Instance>
+			</Project>
+			<Project Disabled="true" GUID="{DD3873C1-D176-45EA-9F7D-0A59818194B3}" Name="ph_lv1_Communication_ads" PrjFilePath="ph_lv1_Communication_ads\ph_lv1_Communication_ads.plcproj" TmcFilePath="ph_lv1_Communication_ads\ph_lv1_Communication_ads.tmc" ReloadTmc="true" AmsPort="855" FileArchiveSettings="#x000e">
+				<Instance Id="#x01010070" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+					<Name>ph_lv1_Communication_ads Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+				</Instance>
+			</Project>
+			<Project Disabled="true" GUID="{950EED29-440F-4265-ADEF-7CF1198AB0E1}" Name="ph_lv1_io" PrjFilePath="ph_lv1_io\ph_lv1_io.plcproj" TmcFilePath="ph_lv1_io\ph_lv1_io.tmc" ReloadTmc="true" AmsPort="856" FileArchiveSettings="#x000e">
+				<Instance Id="#x01010080" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+					<Name>ph_lv1_io Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+				</Instance>
+			</Project>
+			<Project GUID="{D023EA59-A734-45A0-9713-35E08940A6B8}" Name="test_lv1_Communication_opcua" PrjFilePath="test_lv1_Communication_opcua\test_lv1_Communication_opcua.plcproj" TmcFilePath="test_lv1_Communication_opcua\test_lv1_Communication_opcua.tmc" ReloadTmc="true" AmsPort="857" FileArchiveSettings="#x000e">
+				<Instance Id="#x01010090" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+					<Name>test_lv1_Communication_opcua Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x01010091"/>
+					</TaskPouOids>
 				</Instance>
 			</Project>
 		</Plc>

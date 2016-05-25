@@ -14,7 +14,7 @@
     <Implicit_KindOfTask>{b0354a9b-dff2-4951-89bd-7053ae9f9424}</Implicit_KindOfTask>
     <Implicit_Jitter_Distribution>{96c4bb45-a3d9-4775-b482-4e9628a2bc51}</Implicit_Jitter_Distribution>
     <LibraryReferences>{4f8075db-6bf9-4911-a943-11d74fcb191d}</LibraryReferences>
-    <DefaultNamespace>ph_lv1</DefaultNamespace>
+    <DefaultNamespace>ph_lv1_motion</DefaultNamespace>
     <Released>false</Released>
     <Author>Poh</Author>
     <Company>Poh</Company>
@@ -30,15 +30,10 @@
       <DefaultResolution>Tc2_MC2, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_MC2</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="tclibph_lv0">
+    <PlaceholderReference Include="tclib_ph_lv0">
       <DefaultResolution>tclib_ph_lv0, * (Poh)</DefaultResolution>
       <Namespace>ph_lv0</Namespace>
     </PlaceholderReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PlaceholderResolution Include="tclibph_lv0">
-      <Resolution>tclib_ph_lv0, * (Poh)</Resolution>
-    </PlaceholderResolution>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Lv1_Motion" />
@@ -66,6 +61,11 @@
     <None Include="ph_lv1_Motion.tmc">
       <SubType>Content</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PlaceholderResolution Include="tclib_ph_lv0">
+      <Resolution>tclib_ph_lv0, * (Poh)</Resolution>
+    </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>

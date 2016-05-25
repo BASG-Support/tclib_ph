@@ -29,7 +29,9 @@ VAR
 	
 	_NAMESPACE			: STRING(255);
 	_NAMESPACE_INDEX	: UINT;
-		
+	_NAMESPACE_ERROR	: BOOL;
+	
+	_INTERNAL_STATE		: INT := 0;
 	_C_GETHOSTNAME 		: FB_GetHostName;  
 END_VAR
 ]]></Declaration>
@@ -38,40 +40,81 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{0331de66-c26c-4c84-8457-db8694ec49d7}">
       <Folder Name="Config" Id="{1433d8e8-e5ee-4164-966f-b668ed365b73}" />
-      <Folder Name="Misc" Id="{1d9efd6d-315d-4fb7-b72c-313ea9ae611f}" />
+      <Folder Name="Generic Communication Interface" Id="{df904197-c61e-47e6-b346-066221c47a86}" />
+      <Folder Name="Misc" Id="{1d9efd6d-315d-4fb7-b72c-313ea9ae611f}">
+        <Folder Name="_Internal" Id="{e86756ad-10b1-4a41-a749-fafc8db6e78c}" />
+      </Folder>
       <Folder Name="OpcConnection" Id="{4cfbacb9-1bae-41f7-8ffe-ac54c52be521}" />
-      <Folder Name="ReadWrite" Id="{198097a9-6f82-45fb-9c91-bcb629af2d2c}" />
+      <Folder Name="ReadWrite" Id="{198097a9-6f82-45fb-9c91-bcb629af2d2c}">
+        <Folder Name="Handle" Id="{6515f9a1-ad5b-4fa3-ab97-1c531c10c601}" />
+      </Folder>
     </Folder>
     <Folder Name="Properties" Id="{334e337f-d7cd-4105-bce3-7a4a785f33cd}" />
-    <Method Name="Close_Connection" Id="{8412ca0e-b938-4a83-8185-3ebdfd269cb4}" FolderPath="Methods\OpcConnection\">
+    <Method Name="Close_Connection" Id="{8412ca0e-b938-4a83-8185-3ebdfd269cb4}" FolderPath="Methods\Generic Communication Interface\">
       <Declaration><![CDATA[(*
-	Y:2016		M:05		D:20
-	D:Method to close the opened OPC UA connection.
+	Y:2016		M:05		D:25
+	D:Method to close the opened OPC UA connection in the context of a generic communication interface.
 *)
-METHOD Close_Connection : RETURN_CODE
+METHOD Close_Connection : ph_lv0.RETURN_CODE
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[_C_CLOSECONNECTION(
-	Execute:= TRUE, 
-	ConnectionHdl:= _HNDL_CONNECTION);
-IF _C_CLOSECONNECTION.Error THEN
-	_C_CLOSECONNECTION(
-		Execute:= FALSE );
+        <ST><![CDATA[CASE Opc_Disconnect() OF 
+ph_lv0.LV0_RETURNCODE.RETURN_ERROR:
 	Close_Connection := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
-ELSIF _C_CLOSECONNECTION.Done AND NOT _C_CLOSECONNECTION.Busy THEN
-	_C_CLOSECONNECTION(
-		Execute:= FALSE );
-	//CLEAN UP
-		_HNDL_CONNECTION := 0;
-		_NAMESPACE_INDEX := 0;
-		MEMSET(ADR(_NAMESPACE), 0, SIZEOF(_NAMESPACE));
+ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS:
 	Close_Connection := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 ELSE
 	Close_Connection := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
-END_IF
-]]></ST>
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Create_Handle" Id="{a4964f12-40fb-495d-a3bc-a392edf2b60d}" FolderPath="Methods\Generic Communication Interface\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05		D:20
+	D:Method to create the node handle in the context of a generic interface.
+*)
+METHOD Create_Handle : ph_lv0.RETURN_CODE
+VAR_INPUT
+	//.COMM_HANDLE is to be used as a STRING(255)
+		Configuration	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+	//Direct handle output
+		OUT_HANDLE		: POINTER TO UDINT;
+END_VAR
+VAR	
+	NODE_ID				: STRING(255);
+	_HNDL_NODE			: DWORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[MEMCPY(ADR(NODE_ID), ADR(CONFIGURATION.Comm_Handle), SIZEOF(CONFIGURATION.Comm_Handle));
+
+CASE Get_NodeHandle(NODE_ID, ADR(_HNDL_NODE)) OF 
+ph_lv0.LV0_RETURNCODE.RETURN_ERROR:
+	Message := 'Unable to create handle';
+	Create_Handle := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS:
+	OUT_HANDLE^ := _HNDL_NODE;
+	Create_Handle := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Create_Handle := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{37109483-0072-4117-96f3-be8b2ec8ef88}" FolderPath="Methods\Misc\_Internal\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	ENCRYPTED_CONNECTION 	: BOOL := FALSE;
+	ENCRYPTION_128_BITS		: BOOL := FALSE;
+	SERVER_URL 				: STRING(255);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_ENCRYPTED_CONNECTION 	:= ENCRYPTED_CONNECTION;
+_ENCRYPTION_128_BITS	:= ENCRYPTION_128_BITS;
+_SERVER_URL := SERVER_URL;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Force_Close_Connection" Id="{9ed19c5b-1235-42c6-b953-eed091225547}" FolderPath="Methods\OpcConnection\">
@@ -79,7 +122,7 @@ END_IF
 	Y:2016		M:05		D:20
 	D:Not recommended for use. Method to reset the internal connection details even if the base function fails.
 *)
-METHOD Force_Close_Connection : RETURN_CODE
+METHOD Force_Close_Connection : ph_lv0.RETURN_CODE
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -142,12 +185,12 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Get_NodeHandle" Id="{eb44ed22-69b4-4c89-8748-19a0747f9fec}" FolderPath="Methods\ReadWrite\">
+    <Method Name="Get_NodeHandle" Id="{eb44ed22-69b4-4c89-8748-19a0747f9fec}" FolderPath="Methods\ReadWrite\Handle\">
       <Declaration><![CDATA[(*
 	Y:2016		M:05		D:20
 	D:Method to obtain the node handle. Supports string identifier only.
 *)
-METHOD Get_NodeHandle : RETURN_CODE
+METHOD Get_NodeHandle : ph_lv0.RETURN_CODE
 VAR_INPUT
 	NODE_ID				: STRING(255);
 	NODE_HANDLE			: POINTER TO DWORD;
@@ -204,12 +247,8 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="Open_Connection" Id="{ea31e5a4-07fc-439f-b83b-c8bdaa269330}" FolderPath="Methods\OpcConnection\">
-      <Declaration><![CDATA[(*
-	Y:2016		M:05		D:20
-	D:Method to open the OPC UA connection.
-*)
-METHOD Open_Connection : RETURN_CODE
+    <Method Name="Opc_Connect" Id="{89bfb646-58c0-4698-a048-3f0564876c27}" FolderPath="Methods\OpcConnection\">
+      <Declaration><![CDATA[METHOD PRIVATE Opc_Connect : ph_lv0.RETURN_CODE
 VAR_INPUT
 END_VAR
 VAR	
@@ -231,9 +270,9 @@ ELSE
 	_STConnectionInfo.eSecurityPolicyUri := E_UASecurityPolicy.eUASecurityPolicy_Basic256; 
 END_IF
 
-_STConnectionInfo.eTransportProfileUri := E_UATransportProfile.eUATransportProfileUri_UATcp;
-_STConnectionInfo.tConnectTimeout := T#30S;
-_STConnectionInfo.tSessionTimeout := T#30S;
+_STConnectionInfo.eTransportProfileUri 	:= E_UATransportProfile.eUATransportProfileUri_UATcp;
+_STConnectionInfo.tConnectTimeout 		:= T#30S;
+_STConnectionInfo.tSessionTimeout 		:= T#30S;
 
 _C_OPENCONNECTION(
 	Execute:= TRUE, 
@@ -245,61 +284,54 @@ _C_OPENCONNECTION(
 IF _C_OPENCONNECTION.Error THEN
 	_C_OPENCONNECTION(
 		Execute:= FALSE );
-	Open_Connection := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	Opc_Connect := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
 ELSIF _C_OPENCONNECTION.Done AND NOT _C_OPENCONNECTION.Busy THEN
 	_C_OPENCONNECTION(
 		Execute:= FALSE );
-	Open_Connection := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	Opc_Connect := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 ELSE
-	Open_Connection := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+	Opc_Connect := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Read" Id="{138b588f-0893-4549-8e09-86db09f9a175}">
-      <Declaration><![CDATA[METHOD Read : PH_LV1.RETURN_CODE
+    <Method Name="Opc_Disconnect" Id="{71d865c6-81b4-4d89-b713-2d0156c04e68}" FolderPath="Methods\OpcConnection\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05		D:25
+	D:Method to close the opened OPC UA connection
+*)
+METHOD PRIVATE Opc_Disconnect : RETURN_CODE
 VAR_INPUT
-	Configuration	: PH_LV1.S_GCI_CONFIG;
 END_VAR
 VAR	
-	NODE_HANDLE			: DWORD;
-	DATA				: PVOID;
-	DATA_SIZE 			: UDINT;
-	OPCUA_START_INDEX 	: UDINT;
-	OPCUA_END_INDEX		: UDINT;
-	_STNodeAddInfo		: ST_UANodeAdditionalInfo;
-	_STNodeIndexRange	: ST_UAIndexRange;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[_STNodeIndexRange.nStartIndex := OPCUA_START_INDEX;
-_STNodeIndexRange.nEndIndex := OPCUA_END_INDEX;
-
-_STNodeAddInfo.nIndexRangeCount := 1;
-_STNodeAddInfo.stIndexRange[1] := _STNodeIndexRange;
-
-_C_READ(
-	Execute:= TRUE, 
-	ConnectionHdl:= _HNDL_CONNECTION, 
-	NodeHdl:= NODE_HANDLE, 
-	stNodeAddInfo:= _STNodeAddInfo, 
-	pVariable:= DATA, 
-	cbData:= DATA_SIZE );
-	
-IF _C_READ.Error THEN
-	_C_READ(
-		Execute:= FALSE );
-	Read_In := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
-ELSIF _C_READ.Done AND NOT _C_READ.Busy THEN
-	_C_READ(
-		Execute:= FALSE );
-	Read_In := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+        <ST><![CDATA[IF _HNDL_CONNECTION <> 0 THEN	
+	_C_CLOSECONNECTION(
+		Execute:= TRUE, 
+		ConnectionHdl:= _HNDL_CONNECTION);
+	IF _C_CLOSECONNECTION.Error THEN
+		_C_CLOSECONNECTION(
+			Execute:= FALSE );
+		Opc_Disconnect := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	ELSIF _C_CLOSECONNECTION.Done AND NOT _C_CLOSECONNECTION.Busy THEN
+		_C_CLOSECONNECTION(
+			Execute:= FALSE );
+		//CLEAN UP
+			_HNDL_CONNECTION := 0;
+			_NAMESPACE_INDEX := 0;
+			MEMSET(ADR(_NAMESPACE), 0, SIZEOF(_NAMESPACE));
+		Opc_Disconnect := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	ELSE
+		Opc_Disconnect := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+	END_IF
 ELSE
-	Read_In := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+	Opc_Disconnect := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Read_In" Id="{3deefe4d-1606-41df-acc1-af33d39f9184}" FolderPath="Methods\ReadWrite\">
-      <Declaration><![CDATA[METHOD Read_In : RETURN_CODE
+    <Method Name="Opc_Read" Id="{3deefe4d-1606-41df-acc1-af33d39f9184}" FolderPath="Methods\ReadWrite\">
+      <Declaration><![CDATA[METHOD PRIVATE Opc_Read : ph_lv0.RETURN_CODE
 VAR_INPUT
 	NODE_HANDLE	: DWORD;
 	DATA		: PVOID;
@@ -329,18 +361,192 @@ _C_READ(
 IF _C_READ.Error THEN
 	_C_READ(
 		Execute:= FALSE );
-	Read_In := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	Opc_Read := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
 ELSIF _C_READ.Done AND NOT _C_READ.Busy THEN
 	_C_READ(
 		Execute:= FALSE );
-	Read_In := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	Opc_Read := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 ELSE
-	Read_In := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+	Opc_Read := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Release_NodeHandle" Id="{49fb9bef-50d7-4f01-91ce-b11e86cda02a}" FolderPath="Methods\ReadWrite\">
-      <Declaration><![CDATA[METHOD Release_NodeHandle : INT
+    <Method Name="Opc_Write" Id="{7306d6d0-1149-4760-9d9f-04821ec0b38a}" FolderPath="Methods\ReadWrite\">
+      <Declaration><![CDATA[METHOD PRIVATE Opc_Write : ph_lv0.RETURN_CODE
+VAR_INPUT
+	NODE_HANDLE			: DWORD;
+	DATA				: PVOID;
+	DATA_SIZE 			: UDINT;
+	OPCUA_START_INDEX 	: UDINT;
+	OPCUA_END_INDEX		: UDINT;
+END_VAR
+VAR	
+	_STNodeAddInfo		: ST_UANodeAdditionalInfo;
+	_STNodeIndexRange	: ST_UAIndexRange;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_STNodeIndexRange.nStartIndex := OPCUA_START_INDEX;
+_STNodeIndexRange.nEndIndex := OPCUA_END_INDEX;
+
+_STNodeAddInfo.nIndexRangeCount := 1;
+_STNodeAddInfo.stIndexRange[1] := _STNodeIndexRange;
+
+_C_WRITE(
+	Execute:= TRUE, 
+	ConnectionHdl:= _HNDL_CONNECTION, 
+	NodeHdl:= NODE_HANDLE, 
+	stNodeAddInfo:= , 
+	pVariable:= DATA, 
+	cbData:= DATA_SIZE );
+IF _C_WRITE.Error THEN
+	_C_WRITE(
+		Execute:= FALSE );
+	Opc_Write := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _C_WRITE.Done AND NOT _C_WRITE.Busy THEN
+	_C_WRITE(
+		Execute:= FALSE );
+	Opc_Write := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Opc_Write := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open_Connection" Id="{ea31e5a4-07fc-439f-b83b-c8bdaa269330}" FolderPath="Methods\Generic Communication Interface\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05		D:20
+	D:Method to open the OPC UA connection.
+*)
+METHOD Open_Connection : ph_lv0.RETURN_CODE
+VAR_INPUT
+	CONNECTION_INFO : S_GCI_CONFIG;
+END_VAR
+VAR	
+	_STConnectionInfo	: ST_UASessionConnectInfo; 
+	_Status : INT := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE _INTERNAL_STATE OF 
+-1:
+	_Status := 1;
+0:
+	IF _HNDL_CONNECTION <> 0 THEN
+		//CONNECTION EXISTS, THEREFORE GO TO OPC UA NAMESPACE RESOLUTION
+			_INTERNAL_STATE := 2;		
+	ELSE
+		//NO EXISTING CONNECTION, THEREFORE OPENS INITIAL CONNECTION
+			_INTERNAL_STATE := 1;		
+	END_IF
+1:
+	CASE Opc_Connect() OF 
+	ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS:
+			MEMSET(ADR(_NAMESPACE), 0, SIZEOF(_NAMESPACE));
+		_INTERNAL_STATE := _INTERNAL_STATE + 1;
+	ph_lv0.LV0_RETURNCODE.RETURN_ERROR:
+		Message := 'Unable to open OPC UA connection';
+		_INTERNAL_STATE := 1;
+	END_CASE
+2:
+	MEMCPY(ADR(CONNECTION_INFO.Comm_Handle), ADR(_NAMESPACE), SIZEOF(CONNECTION_INFO.Comm_Handle));
+	CASE Set_Namespace(_NAMESPACE) OF
+	ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS:
+		_INTERNAL_STATE := _INTERNAL_STATE + 1;
+	ph_lv0.LV0_RETURNCODE.RETURN_ERROR:
+		Message := 'Unable to find OPC UA namespace';
+		_INTERNAL_STATE := 1;
+	END_CASE
+3:
+	_Status := -1;
+END_CASE
+
+//Method return
+	CASE _Status OF 
+		-1:
+			_INTERNAL_STATE := 0;
+			MEMSET(ADR(Message), 0, SIZEOF(Message));
+			Open_Connection := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+		1:
+			_INTERNAL_STATE := 0;
+			Open_Connection := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+		ELSE
+			Open_Connection := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+	END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Read" Id="{138b588f-0893-4549-8e09-86db09f9a175}" FolderPath="Methods\Generic Communication Interface\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05		D:20
+	D:Method for opc ua read in the context of a generic interface.
+*)
+METHOD Read : RETURN_CODE
+VAR_INPUT
+	Configuration	: S_GCI_CONFIG;
+END_VAR
+VAR	
+	NODE_HANDLE			: DWORD;
+	DATA				: PVOID;
+	DATA_SIZE 			: UDINT;
+	OPCUA_START_INDEX 	: UDINT;
+	OPCUA_END_INDEX		: UDINT;
+	_STNodeAddInfo		: ST_UANodeAdditionalInfo;
+	_STNodeIndexRange	: ST_UAIndexRange;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_STNodeIndexRange.nStartIndex := OPCUA_START_INDEX;
+_STNodeIndexRange.nEndIndex := OPCUA_END_INDEX;
+
+_STNodeAddInfo.nIndexRangeCount := 1;
+_STNodeAddInfo.stIndexRange[1] := _STNodeIndexRange;
+
+_C_READ(
+	Execute:= TRUE, 
+	ConnectionHdl:= _HNDL_CONNECTION, 
+	NodeHdl:= NODE_HANDLE, 
+	stNodeAddInfo:= _STNodeAddInfo, 
+	pVariable:= DATA, 
+	cbData:= DATA_SIZE );
+	
+IF _C_READ.Error THEN
+	_C_READ(
+		Execute:= FALSE );
+	Read := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _C_READ.Done AND NOT _C_READ.Busy THEN
+	_C_READ(
+		Execute:= FALSE );
+	Read := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Read := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Release_Handle" Id="{4b4a7425-070c-4f1c-9f10-5f68cfd354aa}" FolderPath="Methods\Generic Communication Interface\">
+      <Declaration><![CDATA[(*
+	Y:2016		M:05		D:20
+	D:Method to release the node handle in the context of a generic interface.
+*)
+METHOD Release_Handle : RETURN_CODE
+VAR_INPUT
+	//Direct handle input.
+		IN_HANDLE	: POINTER TO UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE Release_NodeHandle(IN_HANDLE^) OF 
+ph_lv0.LV0_RETURNCODE.RETURN_ERROR:
+	Message := 'Unable to release handle';
+	Release_Handle := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS:
+	IN_HANDLE^ := 0;
+	Release_Handle := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Release_Handle := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;	
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Release_NodeHandle" Id="{49fb9bef-50d7-4f01-91ce-b11e86cda02a}" FolderPath="Methods\ReadWrite\Handle\">
+      <Declaration><![CDATA[METHOD PRIVATE Release_NodeHandle : RETURN_CODE
 VAR_INPUT
 	NODE_HANDLE : DWORD;
 END_VAR
@@ -353,13 +559,13 @@ END_VAR
 IF _C_RELEASENODEHANDLE.Error THEN
 	_C_RELEASENODEHANDLE(
 		Execute:= FALSE );		
-	Release_NodeHandle := ENUM_FUNCTIONRESULT.eFunction_Error;
+	Release_NodeHandle := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
 ELSIF _C_RELEASENODEHANDLE.Done AND NOT _C_RELEASENODEHANDLE.Busy THEN
 	_C_RELEASENODEHANDLE(
 		Execute:= FALSE );
-	Release_NodeHandle := ENUM_FUNCTIONRESULT.eFunction_Success;
+	Release_NodeHandle := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 ELSE
-	Release_NodeHandle := ENUM_FUNCTIONRESULT.eFunction_Busy;
+	Release_NodeHandle := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -421,10 +627,11 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF _HNDL_CONNECTION <> 0 THEN
 	Message := 'Close connection before changing the connection$'s security settings';
-	Set_Server_Url := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	Set_Security_Config := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
 ELSE
 	_ENCRYPTED_CONNECTION := ENCRYPTED_CONNECTION;
 	_ENCRYPTION_128_BITS := ENCRYPTION_128_BITS;
+	Set_Security_Config := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 END_IF]]></ST>
       </Implementation>
     </Method>
@@ -445,13 +652,14 @@ END_VAR
 	Set_Server_Url := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
 ELSE
 	_SERVER_URL := URL;
+	Set_Server_Url := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Write" Id="{607d794f-bd28-4241-9678-4fd445839461}">
-      <Declaration><![CDATA[METHOD Write : PH_LV1.RETURN_CODE
+    <Method Name="Write" Id="{607d794f-bd28-4241-9678-4fd445839461}" FolderPath="Methods\Generic Communication Interface\">
+      <Declaration><![CDATA[METHOD Write : RETURN_CODE
 VAR_INPUT
-	Configuration	: PH_LV1.S_GCI_CONFIG;
+	Configuration	: S_GCI_CONFIG;
 END_VAR
 VAR	
 	NODE_HANDLE			: DWORD;
@@ -479,54 +687,13 @@ _C_WRITE(
 IF _C_WRITE.Error THEN
 	_C_WRITE(
 		Execute:= FALSE );
-	Write_In := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	Write := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
 ELSIF _C_WRITE.Done AND NOT _C_WRITE.Busy THEN
 	_C_WRITE(
 		Execute:= FALSE );
-	Write_In := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	Write := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 ELSE
-	Write_In := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
-END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Write_In" Id="{7306d6d0-1149-4760-9d9f-04821ec0b38a}" FolderPath="Methods\ReadWrite\">
-      <Declaration><![CDATA[METHOD Write_In : RETURN_CODE
-VAR_INPUT
-	NODE_HANDLE			: DWORD;
-	DATA				: PVOID;
-	DATA_SIZE 			: UDINT;
-	OPCUA_START_INDEX 	: UDINT;
-	OPCUA_END_INDEX		: UDINT;
-END_VAR
-VAR	
-	_STNodeAddInfo		: ST_UANodeAdditionalInfo;
-	_STNodeIndexRange	: ST_UAIndexRange;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[_STNodeIndexRange.nStartIndex := OPCUA_START_INDEX;
-_STNodeIndexRange.nEndIndex := OPCUA_END_INDEX;
-
-_STNodeAddInfo.nIndexRangeCount := 1;
-_STNodeAddInfo.stIndexRange[1] := _STNodeIndexRange;
-
-_C_WRITE(
-	Execute:= TRUE, 
-	ConnectionHdl:= _HNDL_CONNECTION, 
-	NodeHdl:= NODE_HANDLE, 
-	stNodeAddInfo:= , 
-	pVariable:= DATA, 
-	cbData:= DATA_SIZE );
-IF _C_WRITE.Error THEN
-	_C_WRITE(
-		Execute:= FALSE );
-	Write_In := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
-ELSIF _C_WRITE.Done AND NOT _C_WRITE.Busy THEN
-	_C_WRITE(
-		Execute:= FALSE );
-	Write_In := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
-ELSE
-	Write_In := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+	Write := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
 END_IF]]></ST>
       </Implementation>
     </Method>

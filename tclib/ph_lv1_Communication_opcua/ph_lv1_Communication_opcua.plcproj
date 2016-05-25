@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{3ca22d6f-3569-478f-8ecd-7ccfdf9ab6c6}</ProjectGuid>
     <SubObjectsSortedByName>True</SubObjectsSortedByName>
-    <Name>ph_liv1_Communication_opcua</Name>
+    <Name>ph_lv1_Communication_opcua</Name>
     <ProgramVersion>3.1.4020.1</ProgramVersion>
     <Application>{daa12865-b74e-4813-82e2-f3b44ee8d0a2}</Application>
     <TypeSystem>{cd4de880-3c65-4c6d-84a9-a8176f1117c8}</TypeSystem>
@@ -18,7 +18,7 @@
     <Company>Poh</Company>
     <Title>tclib_ph_lv1_comm_opcua</Title>
     <ProjectVersion>0.1.1.0</ProjectVersion>
-    <DefaultNamespace>ph_lv1</DefaultNamespace>
+    <DefaultNamespace>ph_lv1_opcua</DefaultNamespace>
     <Placeholder>tclib_ph_lv1_comm_opcua</Placeholder>
     <Author>Poh</Author>
     <!--    <OutputType>Exe</OutputType>
@@ -40,14 +40,6 @@
     </Compile>
     <Compile Include="Lv1_Comm_Opcua\C_OPC_DATASERVER.TcPOU">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Project Information\F_GetCompany.TcPOU">
-      <SubType>Code</SubType>
-      <SystemCall>true</SystemCall>
-    </Compile>
-    <Compile Include="Project Information\F_GetTitle.TcPOU">
-      <SubType>Code</SubType>
-      <SystemCall>true</SystemCall>
     </Compile>
     <Compile Include="Project Information\F_GetVersion.TcPOU">
       <SubType>Code</SubType>
@@ -74,28 +66,33 @@
       <DefaultResolution>Tc3_PLCopen_OpcUa, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_PLCopen_OpcUa</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="tclibph_lv0">
+    <PlaceholderReference Include="tclib_ph_lv0">
       <DefaultResolution>tclib_ph_lv0, * (Poh)</DefaultResolution>
       <Namespace>ph_lv0</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="tclib_ph_lv1_generic_communication_interface">
       <DefaultResolution>tclib_ph_lv1_generic_communication_interface, * (Poh)</DefaultResolution>
-      <Namespace>ph_lv1</Namespace>
+      <Namespace>ph_lv1_generic_communication_interface</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderResolution Include="tclibph_lv0">
+    <PlaceholderResolution Include="tclib_ph_lv0">
       <Resolution>tclib_ph_lv0, 0.1.1.0 (Poh)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="tclib_ph_lv1_generic_communication_interface">
       <Resolution>tclib_ph_lv1_generic_communication_interface, * (Poh)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ph_lv1_Communication_opcua.tmc">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -129,13 +126,13 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
   <!-- 

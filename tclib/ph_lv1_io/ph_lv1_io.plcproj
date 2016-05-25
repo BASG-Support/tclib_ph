@@ -1,66 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <!-- <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>-->
     <FileVersion>1.0.0.0</FileVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{631de151-bc98-4191-bd8e-86cd9c35bbfe}</ProjectGuid>
+    <ProjectGuid>{950eed29-440f-4265-adef-7cf1198ab0e1}</ProjectGuid>
     <SubObjectsSortedByName>True</SubObjectsSortedByName>
-    <Name>test_lv1_motion</Name>
+    <Name>ph_lv1_io</Name>
     <ProgramVersion>3.1.4020.1</ProgramVersion>
-    <Application>{09e141ca-5a30-4ed4-b13f-bc14a3a13960}</Application>
-    <TypeSystem>{8917b933-228f-486d-9b5f-f2c3a1dacce5}</TypeSystem>
-    <Implicit_Task_Info>{191b4f2a-db20-4467-8b83-4367907bc1bf}</Implicit_Task_Info>
-    <Implicit_KindOfTask>{e275a0bf-94c6-4041-96cb-267a5e8da025}</Implicit_KindOfTask>
-    <Implicit_Jitter_Distribution>{c2a0158c-943b-48b1-8d51-ab5e76dce2aa}</Implicit_Jitter_Distribution>
-    <LibraryReferences>{2729dc80-fe51-4cf2-b98d-4492b677ec22}</LibraryReferences>
+    <Application>{5cfbbd62-9036-4f2f-917b-da0fdc57f3a6}</Application>
+    <TypeSystem>{f63a4fbe-6a2f-4299-a3d1-4952d268968d}</TypeSystem>
+    <Implicit_Task_Info>{34c050b6-02e7-43a1-be80-3b3b12dc5f48}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{019c1df8-babb-4de1-8afb-c9ff4b49faf7}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{aa28c46d-9e72-4485-af56-c9dd4e28fe27}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{c293d3e6-ebc1-4897-b949-167f99b591f4}</LibraryReferences>
+    <Company>Poh</Company>
+    <Released>false</Released>
+    <Author>Poh</Author>
+    <DefaultNamespace>ph_lv1</DefaultNamespace>
+    <Title>tclib_ph_lv1_io</Title>
+    <ProjectVersion>0.1.1.0</ProjectVersion>
+    <!--    <OutputType>Exe</OutputType>
+    <RootNamespace>MyApplication</RootNamespace>
+    <AssemblyName>MyApplication</AssemblyName>-->
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="PlcTask.TcTTO">
+    <Folder Include="Lv1_IO" />
+    <Folder Include="Lv1_IO\Class Interface" />
+    <Folder Include="Lv1_IO\Class" />
+    <Folder Include="Version" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Lv1_IO\Class Interface\IFC_GENERIC_IO_INTERFACE.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\MAIN.TcPOU">
+    <Compile Include="Lv1_IO\Class\C_GenericDigital_2Channel.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Version\Global_Version.TcGVL">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="POUs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PlaceholderReference Include="Tc2_Standard">
-      <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_Standard</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc2_System">
-      <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc2_System</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_Module">
-      <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc3_Module</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="tclib_ph_lv1_motion">
-      <DefaultResolution>tclib_ph_lv1_motion, * (Poh)</DefaultResolution>
-      <Namespace>ph_lv1_motion</Namespace>
+    <PlaceholderReference Include="tclibph_lv0">
+      <DefaultResolution>tclib_ph_lv0, * (Poh)</DefaultResolution>
+      <Namespace>ph_lv0</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test_lv1_motion.tmc">
-      <SubType>Content</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <PlaceholderResolution Include="tclib_ph_lv0">
-      <Resolution>tclib_ph_lv0, 0.1.1.0 (Poh)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="tclib_ph_lv1_motion">
-      <Resolution>tclib_ph_lv1_motion, * (Poh)</Resolution>
+    <PlaceholderResolution Include="tclibph_lv0">
+      <Resolution>tclib_ph_lv0, * (Poh)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -82,12 +78,6 @@
           </d>
           <d n="Values" t="Hashtable" />
         </o>
-        <v>{8F99A816-E488-41E4-9FA3-846536012284}</v>
-        <o>
-          <v n="Name">"{8F99A816-E488-41E4-9FA3-846536012284}"</v>
-          <d n="SubKeys" t="Hashtable" />
-          <d n="Values" t="Hashtable" />
-        </o>
         <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
         <o>
           <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
@@ -100,13 +90,25 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
+  <!-- 
+   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+-->
 </Project>

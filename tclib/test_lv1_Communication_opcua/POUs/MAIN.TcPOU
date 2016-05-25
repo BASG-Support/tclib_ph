@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="MAIN" Id="{93d97aed-06bb-4f15-b48b-e77cbb41f41e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	c_client : C_OPC_DATACLIENT(ENCRYPTED_CONNECTION:= FALSE, ENCRYPTION_128_BITS:= FALSE, SERVER_URL:= 'opc.tcp://localhost:4840');
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

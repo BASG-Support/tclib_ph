@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_HTTP_BASE" Id="{12de8f6a-11e0-44df-8e22-77dc018836cb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_HTTP_BASE
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="Line_Space" Id="{23e9f583-afef-4949-95f9-9b835024c173}">
+      <Declaration><![CDATA[PROPERTY Line_Space : String(1)]]></Declaration>
+      <Get Name="Get" Id="{f693bc7d-fa57-46de-b794-7017a3b7fa7f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Line_Space := ' ';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Line_Terminator" Id="{0fb95a2d-b8fb-44a1-9469-65cd5bfeb118}">
+      <Declaration><![CDATA[PROPERTY Line_Terminator : STRING(2)]]></Declaration>
+      <Get Name="Get" Id="{ef1f5196-8288-4220-871b-5b239b36612a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Line_Terminator := '$R$N';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Url_Split_Charactor" Id="{bcc3e33d-a2d4-419a-bea0-49952b86deec}">
+      <Declaration><![CDATA[PROPERTY PROTECTED Url_Split_Charactor : STRING(1)]]></Declaration>
+      <Get Name="Get" Id="{a73ed253-cc19-4b50-9830-f2395f2dac63}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Url_Split_Charactor := '/';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

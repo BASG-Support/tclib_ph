@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_GenericDigital_2Channel" Id="{d84c7027-fcca-4afa-8053-19d979d3531b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_GenericDigital_2Channel IMPLEMENTS IFC_GENERIC_IO_INTERFACE
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Channel_Data AT %Q* : ARRAY[1..2] OF BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="IO_Read" Id="{adbcf430-ee4a-4ada-858b-f3f90cd33617}">
+      <Declaration><![CDATA[METHOD IO_Read : ph_lv0.RETURN_CODE
+VAR_INPUT
+	CHANNEL	: INT;
+	DATA	: POINTER TO LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IO_TYPE" Id="{4089dc1e-1971-47de-96e1-a1ac2a1a61b7}">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY IO_TYPE : INT
+]]></Declaration>
+      <Get Name="Get" Id="{974d94e8-0491-4a76-b01e-ee2cee225380}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ba07c148-1785-4a3f-8b94-1a3023c65639}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="IO_Write" Id="{a9af7171-8e03-4ddc-a682-38807e7524b6}">
+      <Declaration><![CDATA[{warning 'add method implementation'}
+METHOD IO_Write : ph_lv0.RETURN_CODE
+VAR_INPUT
+	CHANNEL	: INT;
+	DATA	: LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

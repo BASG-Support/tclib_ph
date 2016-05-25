@@ -20,7 +20,7 @@
     <DefaultNamespace>ph_lv0</DefaultNamespace>
     <Title>tclib_ph_lv0</Title>
     <ProjectVersion>0.1.1.0</ProjectVersion>
-    <Placeholder>tclibph_lv0</Placeholder>
+    <Placeholder>tclib_ph_lv0</Placeholder>
     <!--    <OutputType>Exe</OutputType>
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>-->
@@ -42,6 +42,9 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="Lv0_Components\Modules\M_TRIGGERS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Version\Global_Version.TcGVL">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

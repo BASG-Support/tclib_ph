@@ -210,3 +210,18 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+tclib/_Boot/TwinCAT RT (x64)/Plc/Port_854.autostart
+*.tizip
+*.cid
+*.autostart
+*.app
+*.crc
+*.occ
+*.tclrs
+tclib/test_lv1_motion/_Libraries/poh/tclib_ph_lv1_motion/0.1.1.0/ph_lv1_motion.compiled-library
+tclib/test_lv1_motion/_Libraries/beckhoff automation gmbh/tc2_system/3.4.13.0/tc2_system.compiled-library
+tclib/test_lv0/_Libraries/poh/tclib_ph_lv0/0.1.1.0/ph_lv0.compiled-library
+tclib/ph_liv1_Communication_opcua/_Libraries/beckhoff automation gmbh/tc2_standard/3.3.1.0/tc2_standard.compiled-library
+tclib/ph_liv1_Communication_opcua/_Libraries/beckhoff automation gmbh/tc2_system/3.4.13.0/tc2_system.compiled-library
+tclib/ph_liv1_Communication_opcua/_Libraries/beckhoff automation gmbh/tc2_utilities/3.3.14.0/tc2_utilities.compiled-library
+tclib/ph_liv1_Communication_opcua/_Libraries/beckhoff automation gmbh/tc3_interfaces/3.4.2.0/tc3_interfaces.compiled-library

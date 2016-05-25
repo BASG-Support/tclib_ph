@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_HTTP_REQUEST" Id="{5aaf8f33-78a8-41e3-a1f3-83656888a26d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_HTTP_REQUEST EXTENDS C_HTTP_BASE
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_c_HttpVersion 		: C_HTTP_VERSION(Major_Version:= 1, Minor_Version:= 1);
+	_Url				: STRING(255);
+	_MethodRequest		: E_HTTP_VERBS;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Config" Id="{103ae3c0-a630-4f75-9a9e-fe98c8415a90}" />
+    <Folder Name="Version" Id="{dcd97dd3-f8e3-4dd8-9437-8284b1479537}" />
+    <Property Name="Major_Version" Id="{5d4b69ce-8362-49f8-b4b0-9869e8918a1f}" FolderPath="Version\">
+      <Declaration><![CDATA[PROPERTY Major_Version : uint]]></Declaration>
+      <Get Name="Get" Id="{b39c4944-3f87-4491-9fed-53d0e3fd9ec0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Major_Version := _c_HttpVersion.Major;;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Minor_Version" Id="{56fb7b69-3012-4101-b607-2307b2a51d27}" FolderPath="Version\">
+      <Declaration><![CDATA[PROPERTY Minor_Version : uint]]></Declaration>
+      <Get Name="Get" Id="{605269c8-09de-434e-ad6f-76adad33e88c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Minor_Version := _c_HttpVersion.Minor;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Request_Line" Id="{2d95402a-f586-4179-aec7-2a14502286d3}">
+      <Declaration><![CDATA[PROPERTY PROTECTED Request_Line : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{033fe9b0-a75f-433f-9a19-4541ebb68540}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Request_line :=	CONCAT(LV2_HTTP_DATA_DEFINITIONS.HTTP_VERB_STRING[THIS^._MethodRequest],
+					CONCAT(SUPER^.Line_Space, 
+						CONCAT(_Url,
+							CONCAT(SUPER^.Line_Space,
+								CONCAT(_c_HttpVersion.ToString(),
+									SUPER^.Line_Terminator
+								)
+							)
+						)
+					)
+				);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="ToString" Id="{761de4c4-a5c1-4c6f-b3e9-de8958253803}">
+      <Declaration><![CDATA[METHOD ToString : STRING(LV2_HTTP_DATA_DEFINITIONS.MAX_STRING_LENGTH)
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ToString :=	CONCAT(Request_Line,
+				SUPER^.Line_Terminator
+			);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Url" Id="{578780b4-7864-4a36-8c28-da2e47140761}" FolderPath="Config\">
+      <Declaration><![CDATA[PROPERTY Url : String(255)]]></Declaration>
+      <Get Name="Get" Id="{9b00c056-496a-4b4f-b1c7-c1b12e94dfa8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Url := _url;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{22c218c2-baa9-4c3c-87a5-e310905332d7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_url := url;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Verb" Id="{543ae445-cb7f-4c06-b539-f01e21b8cdda}" FolderPath="Config\">
+      <Declaration><![CDATA[PROPERTY Verb : E_HTTP_VERBS]]></Declaration>
+      <Get Name="Get" Id="{55de2d47-f084-4991-ad81-40e8be6663e5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Verb := _MethodRequest;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{1c2d1c25-2220-46da-b634-753fd8aca037}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_MethodRequest := Verb;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

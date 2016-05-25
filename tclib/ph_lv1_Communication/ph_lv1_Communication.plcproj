@@ -15,10 +15,10 @@
     <Implicit_Jitter_Distribution>{9010c971-713c-4e71-bb18-b662425fde59}</Implicit_Jitter_Distribution>
     <LibraryReferences>{400b9862-3bb2-4ed3-b51b-51d573198360}</LibraryReferences>
     <Company>Poh</Company>
-    <Released>true</Released>
+    <Released>false</Released>
     <Title>tclib_ph_lv1_generic_communication_interface</Title>
     <ProjectVersion>0.1.1.0</ProjectVersion>
-    <DefaultNamespace>ph_lv1</DefaultNamespace>
+    <DefaultNamespace>ph_lv1_generic_communication_interface</DefaultNamespace>
     <Placeholder>tclib_ph_lv1_generic_communication_interface</Placeholder>
     <Author>Poh</Author>
     <!--    <OutputType>Exe</OutputType>
@@ -38,17 +38,6 @@
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderReference Include="tclibph_lv0">
-      <DefaultResolution>tclib_ph_lv0, * (Poh)</DefaultResolution>
-      <Namespace>ph_lv0</Namespace>
-    </PlaceholderReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PlaceholderResolution Include="tclibph_lv0">
-      <Resolution>tclib_ph_lv0, * (Poh)</Resolution>
-    </PlaceholderResolution>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Lv1_Communication\Class Interface\IFC_GENERIC_COMMUNICATION_INTERFACE.TcIO">
       <SubType>Code</SubType>
     </Compile>
@@ -66,19 +55,26 @@
       <SubType>Code</SubType>
       <SystemCall>true</SystemCall>
     </Compile>
-    <Compile Include="Project Information\F_GetVersion.TcPOU">
-      <SubType>Code</SubType>
-      <SystemCall>true</SystemCall>
-    </Compile>
     <Compile Include="Version\Global_Version.TcGVL">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
+  <ItemGroup>
+    <PlaceholderReference Include="tclib_ph_lv0">
+      <DefaultResolution>tclib_ph_lv0, * (Poh)</DefaultResolution>
+      <Namespace>ph_lv0</Namespace>
+    </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PlaceholderResolution Include="tclib_ph_lv0">
+      <Resolution>tclib_ph_lv0, * (Poh)</Resolution>
+    </PlaceholderResolution>
+  </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
@@ -99,13 +95,13 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
   <!-- 

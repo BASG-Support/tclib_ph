@@ -149,9 +149,6 @@ END_VAR
 METHOD Home : RETURN_CODE
 VAR_INPUT
 END_VAR
-VAR
-	_CALIBRATION_FLAG : BOOL;
-END_VAR
 ]]></Declaration>
     </Method>
     <Property Name="Home_To_Limit" Id="{1b8a7d9c-0a81-46d9-8713-0bdc31792cf6}" FolderPath="Properties\Homing\">
@@ -198,9 +195,6 @@ END_VAR
 METHOD Move_Along : RETURN_CODE
 VAR_INPUT
 	Positive_Direction : BOOL;
-END_VAR
-VAR
-	_DIRECTION : MC_Direction;
 END_VAR
 ]]></Declaration>
     </Method>

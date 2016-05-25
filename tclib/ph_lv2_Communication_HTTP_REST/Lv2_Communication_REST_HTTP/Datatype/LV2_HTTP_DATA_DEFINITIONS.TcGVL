@@ -50,7 +50,7 @@ VAR_GLOBAL CONSTANT
 		HTTP_SERVICE_UNAVAILABLE 			: UDINT := 503;
 		HTTP_GATEWAY_TIMEOUT	 			: UDINT := 504;
 		HTTP_VERSION_NOT_SUPPORTED			: UDINT := 505;
-	HTTP_VERB_STRING	: ARRAY[0..E_HTTP_VERBS.VERB_COUNT] OF STRING(15) := 
+	HTTP_VERB_STRING			: ARRAY[0..E_HTTP_VERBS.VERB_COUNT] OF STRING(15) := 
 		[
 			'GET',
 			'HEAD',
@@ -59,6 +59,28 @@ VAR_GLOBAL CONSTANT
 			'CONNECT',
 			'OPTIONS',
 			'TRACE',
+			'_reserved_'
+		];
+	HTTP_STANDARD_HEADER_STRING : ARRAY[0..E_HTTP_STANDARD_HEADERS.Standard_Headers_Size] OF STRING(255) :=
+		[
+			'Accept-Charset',
+			'Accept-Encoding',
+			'Accept-Language',
+			'Authorization',
+			'Expect',
+			'From',
+			'Host',
+			'If-Match',
+			'If-Modified-Since',
+			'If-None-Match',
+			'If-Range',
+			'If-Unmodified-Since',
+			'Max-Forwards',
+			'Proxy-Authorization',
+			'Range',
+			'Referer',
+			'TE',
+			'User-Agent',
 			'_reserved_'
 		];
 END_VAR]]></Declaration>

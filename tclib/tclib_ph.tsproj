@@ -1701,6 +1701,15 @@ External Setpoint Generation:
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 				</Instance>
 			</Project>
+			<Project GUID="{32083033-52D7-43B4-AADE-5DCD8FEA7839}" Name="test_lv2_communication_Http_Rest" PrjFilePath="test_lv2_communication_Http_Rest\test_lv2_communication_Http_Rest.plcproj" TmcFilePath="test_lv2_communication_Http_Rest\test_lv2_communication_Http_Rest.tmc" ReloadTmc="true" AmsPort="873" FileArchiveSettings="#x000e">
+				<Instance Id="#x010100b0" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+					<Name>test_lv2_communication_Http_Rest Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x010100b1"/>
+					</TaskPouOids>
+				</Instance>
+			</Project>
 		</Plc>
 		<Io/>
 	</Project>

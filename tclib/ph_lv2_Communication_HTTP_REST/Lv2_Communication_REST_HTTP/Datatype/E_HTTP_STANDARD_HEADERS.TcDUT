@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="E_HTTP_STANDARD_HEADERS" Id="{2edfc2b5-6a0e-40d5-b51f-448f036be00e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_HTTP_STANDARD_HEADERS :
+(
+	Accept_Charset_Header := 0,
+	Accept_Encoding_Header,
+	Accept_Language_Header,
+	Authorization_Header,
+	Expect_Header,
+	From_Header,
+	Host_Header,
+	If_Match_Header,
+	If_Modified_Since_Header,
+	If_None_Match_Header,
+	If_Range_Header,
+	If_Unmodified_Since_Header,
+	Max_Forwards_Header,
+	Proxy_Authorization_Header,
+	Range_Header,
+	Referer_Header,
+	Te_Header,
+	User_Agent_Header,
+	Standard_Headers_Size
+)UDINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

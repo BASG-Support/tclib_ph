@@ -12,6 +12,17 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Property Name="Header_Delimiter" Id="{fefa1e4e-3b48-41b1-a811-a09dca63ccd7}">
+      <Declaration><![CDATA[PROPERTY Header_Delimiter : STRING(2)]]></Declaration>
+      <Get Name="Get" Id="{34f4b0f2-7bfb-4570-9a77-ad7807f9c3e1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Header_Delimiter := ': ';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Line_Space" Id="{23e9f583-afef-4949-95f9-9b835024c173}">
       <Declaration><![CDATA[PROPERTY Line_Space : String(1)]]></Declaration>
       <Get Name="Get" Id="{f693bc7d-fa57-46de-b794-7017a3b7fa7f}">

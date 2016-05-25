@@ -1,30 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <!-- <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>-->
     <FileVersion>1.0.0.0</FileVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5b9b6a02-0830-4226-bbda-a9fe7bdb4ff5}</ProjectGuid>
+    <ProjectGuid>{32083033-52d7-43b4-aade-5dcd8fea7839}</ProjectGuid>
     <SubObjectsSortedByName>True</SubObjectsSortedByName>
-    <Name>ph_lv2_Communication_HTTP_REST</Name>
+    <Name>test_lv2_communication_Http_Rest</Name>
     <ProgramVersion>3.1.4020.1</ProgramVersion>
-    <Application>{54b7ffc5-8280-445d-9a9c-89cf6c51cdf6}</Application>
-    <TypeSystem>{0bd89ba7-ab1a-4986-bab0-652e8aedda39}</TypeSystem>
-    <Implicit_Task_Info>{d5bc1286-4506-4f75-b423-5c52a0552015}</Implicit_Task_Info>
-    <Implicit_KindOfTask>{0894a1f1-ee98-4a2d-8230-55eb99b142bd}</Implicit_KindOfTask>
-    <Implicit_Jitter_Distribution>{a8761762-e676-4ecd-af71-42f0409c24b1}</Implicit_Jitter_Distribution>
-    <LibraryReferences>{b6654fa7-d471-4a60-9c0f-1a1c559a1f9b}</LibraryReferences>
-    <Released>false</Released>
-    <ProjectVersion>0.1.1.0</ProjectVersion>
-    <Company>Poh</Company>
-    <Author>Poh</Author>
-    <DefaultNamespace>ph_lv2_http_rest</DefaultNamespace>
-    <Title>tclib_ph_lv2_http_rest</Title>
-    <Placeholder>tclib_ph_lv2_http_rest</Placeholder>
-    <!--    <OutputType>Exe</OutputType>
-    <RootNamespace>MyApplication</RootNamespace>
-    <AssemblyName>MyApplication</AssemblyName>-->
+    <Application>{acf321f9-ddaf-4f72-b835-be2721999599}</Application>
+    <TypeSystem>{94249a49-813d-4018-ac82-e1e332945878}</TypeSystem>
+    <Implicit_Task_Info>{9ec02de2-049a-4a36-900b-36f951059537}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{9a1a3654-e9f4-4a68-9b39-5610508d58f8}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{df25259d-11b7-47f8-87bc-193d2bb17784}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{ede1e7a2-8576-4c33-bbc1-d0789758ae8a}</LibraryReferences>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DUTs" />
+    <Folder Include="GVLs" />
+    <Folder Include="VISUs" />
+    <Folder Include="POUs" />
+  </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -34,74 +37,36 @@
       <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_System</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="tclib_ph_lv0">
-      <DefaultResolution>tclib_ph_lv0, * (Poh)</DefaultResolution>
-      <Namespace>ph_lv0</Namespace>
+    <PlaceholderReference Include="Tc3_Module">
+      <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Module</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="tclib_ph_lv1_generic_communication_interface">
-      <DefaultResolution>tclib_ph_lv1_generic_communication_interface, * (Poh)</DefaultResolution>
-      <Namespace>ph_lv1_generic_communication_interface</Namespace>
+    <PlaceholderReference Include="tclib_ph_lv2_http_rest">
+      <DefaultResolution>tclib_ph_lv2_http_rest, * (Poh)</DefaultResolution>
+      <Namespace>ph_lv2_http_rest</Namespace>
     </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test_lv2_communication_Http_Rest.tmc">
+      <SubType>Content</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <PlaceholderResolution Include="tclib_ph_lv0">
       <Resolution>tclib_ph_lv0, 0.1.1.0 (Poh)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="tclib_ph_lv1_generic_communication_interface">
-      <Resolution>tclib_ph_lv1_generic_communication_interface, * (Poh)</Resolution>
+      <Resolution>tclib_ph_lv1_generic_communication_interface, 0.1.1.0 (Poh)</Resolution>
     </PlaceholderResolution>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Lv2_Communication_REST_HTTP" />
-    <Folder Include="Lv2_Communication_REST_HTTP\Datatype" />
-    <Folder Include="Lv2_Communication_REST_HTTP\Class Component" />
-    <Folder Include="Lv2_Communication_REST_HTTP\Http Message" />
-    <Folder Include="Version" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Lv2_Communication_REST_HTTP\Class Component\C_HTTP_BASE.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Class Component\C_HTTP_HEADER.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Class Component\C_HTTP_VERSION.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\C_RESTFUL_CLIENT.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\C_RESTFUL_SERVER.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\E_HTTP_RESPONSE_CODE.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\E_HTTP_STANDARD_HEADERS.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\E_HTTP_VERBS.TcDUT">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\LV2_HTTP_DATA_DEFINITIONS.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Http Message\C_HTTP_REQUEST.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Http Message\C_HTTP_RESPONSE.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Version\Global_Version.TcGVL">
-      <SubType>Code</SubType>
-    </Compile>
+    <PlaceholderResolution Include="tclib_ph_lv2_http_rest">
+      <Resolution>tclib_ph_lv2_http_rest, * (Poh)</Resolution>
+    </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -141,25 +106,13 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
-  <!-- 
-   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Release\</OutputPath>
-    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-  </PropertyGroup>
--->
 </Project>

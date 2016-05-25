@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_HTTP_HEADER" Id="{f4916d40-e672-4a39-af07-e680b56b31a1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_HTTP_HEADER EXTENDS C_HTTP_BASE
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_FieldName 	: STRING(255);
+	_HeaderField: STRING(255);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{db0984ec-abb7-47f0-9af2-a9a0dd131973}" />
+    <Folder Name="Properties" Id="{f10153ac-78e0-47cd-a140-91303f7d4cce}" />
+    <Method Name="Equals" Id="{3902d8e9-12a8-4da2-98b3-710cc8dffbd1}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Equals : BOOL
+VAR_INPUT
+	IN_HEADER : POINTER TO C_HTTP_HEADER;
+END_VAR
+VAR
+	_stringInternal 	: STRING(255);
+	_stringInput 		: STRING(255);
+	_lenString			: INT;
+	_i 					: DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF LEN(IN_HEADER^.Field_Name) <> LEN(THIS^.Field_Name) THEN
+	Equals := FALSE;
+ELSIF LEN(IN_HEADER^.Header_Field) <> LEN(THIS^.Header_Field) THEN
+	Equals := FALSE;
+ELSE
+	_stringInternal := THIS^.Field_Name;
+	_stringInput := IN_HEADER^.Field_Name;
+	_lenString := LEN(_stringInternal);
+	_i := MEMCMP(ADR(_stringinternal),ADR(_stringInput), _lenString);
+	IF _i <> 0 THEN
+		Equals := FALSE;
+	ELSE
+		_stringInternal := THIS^.Header_Field;
+		_stringInput := IN_HEADER^.Header_Field;
+		_lenString := LEN(_stringInternal);
+		_i := MEMCMP(ADR(_stringinternal),ADR(_stringInput), _lenString);
+		IF _i <> 0 THEN
+			Equals := FALSE;
+		ELSE
+			Equals := TRUE;
+		END_IF
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{8a629b36-7f23-4909-b667-670fcd0ea299}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Name : STRING(255);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_FieldName := Name;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Field_Name" Id="{04e727c1-324e-4b1d-a850-04650181a981}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Field_Name : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{503fe4c5-a6d4-4ccd-a58a-24c85418e26c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Field_Name := _FieldName;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ff02c1c9-7548-4158-92cd-b16d33b8e149}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_FieldName := Field_Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Header_Field" Id="{7d96352a-9bf1-4568-85d2-79e6fda2086a}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Header_Field : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{e60e0c26-7033-4328-845b-f99397daab4c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Header_Field := _HeaderField;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{794e1deb-29f2-45bf-86d4-91a33d3f7065}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_HeaderField := Header_Field;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Parse" Id="{1a154c0f-ddf2-4163-9ad1-6377946be8c4}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Parse : RETURN_CODE
+VAR_INPUT
+	IN_STRING	: STRING(255);
+END_VAR
+VAR 
+	_DELIMIT_POSITION : INT;
+	_ENDLINE_POSITION : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_DELIMIT_POSITION := FIND(IN_STRING, SUPER^.Header_Delimiter);
+IF _DELIMIT_POSITION = 0 THEN
+	Parse := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSE
+	_ENDLINE_POSITION := FIND(IN_STRING, SUPER^.Line_Terminator);
+	IF _ENDLINE_POSITION = 0 THEN
+		Parse := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 2;
+	ELSE
+		_FieldName := MID(IN_STRING, _DELIMIT_POSITION - 1, 1);
+		_HeaderField := MID(IN_STRING, _ENDLINE_POSITION - (_DELIMIT_POSITION + 2), _DELIMIT_POSITION + 2); 
+		Parse := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ToString" Id="{78ebe571-63bd-4d42-9d18-e745e34f13a3}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ToString : String(255)
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ToString := CONCAT(THIS^.Field_Name,
+				CONCAT(SUPER^.Header_Delimiter, 
+					CONCAT(THIS^.Header_Field,
+						SUPER^.Line_Terminator
+					)
+				)
+			);]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="MAIN" Id="{5aa039c4-acf9-4778-abe4-2f2bcc02fb57}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	_debug :  DINT;
+	_debug_1 :  BOOL;
+	_debug_2 :  BOOL;
+	_debug_3 :  STRING(255);
+	httpheader : C_HTTP_HEADER(Name:= 'test');
+	httpheader_1 : C_HTTP_HEADER(Name:= 'test');
+	httpheader_2 : C_HTTP_HEADER(Name:= 'test');
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[_debug := httpheader.Parse('Host: localhost:80$R$L');
+httpheader_1.Parse('Host: localhost:80$R$L');
+httpheader_2.Parse('This-Is-My-Custom-Header: localhost:80$R$L');
+_debug_1 := httpheader.Equals(ADR(httpheader_1));
+_debug_2 := httpheader.Equals(ADR(httpheader_2));
+_debug_3 := httpheader.ToString();
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1686,13 +1686,19 @@ External Setpoint Generation:
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 				</Instance>
 			</Project>
-			<Project GUID="{D023EA59-A734-45A0-9713-35E08940A6B8}" Name="test_lv1_Communication_opcua" PrjFilePath="test_lv1_Communication_opcua\test_lv1_Communication_opcua.plcproj" TmcFilePath="test_lv1_Communication_opcua\test_lv1_Communication_opcua.tmc" ReloadTmc="true" AmsPort="857" FileArchiveSettings="#x000e">
+			<Project GUID="{D023EA59-A734-45A0-9713-35E08940A6B8}" Name="test_lv1_Communication_opcua" PrjFilePath="test_lv1_Communication_opcua\test_lv1_Communication_opcua.plcproj" TmcFilePath="test_lv1_Communication_opcua\test_lv1_Communication_opcua.tmc" ReloadTmc="true" AmsPort="872" FileArchiveSettings="#x000e">
 				<Instance Id="#x01010090" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
 					<Name>test_lv1_Communication_opcua Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<TaskPouOids>
 						<TaskPouOid Prio="20" OTCID="#x01010091"/>
 					</TaskPouOids>
+				</Instance>
+			</Project>
+			<Project Disabled="true" GUID="{5B9B6A02-0830-4226-BBDA-A9FE7BDB4FF5}" Name="ph_lv2_Communication_HTTP_REST" PrjFilePath="ph_lv2_Communication_HTTP_REST\ph_lv2_Communication_HTTP_REST.plcproj" TmcFilePath="ph_lv2_Communication_HTTP_REST\ph_lv2_Communication_HTTP_REST.tmc" ReloadTmc="true" AmsPort="857" FileArchiveSettings="#x000e">
+				<Instance Id="#x010100a0" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
+					<Name>ph_lv2_Communication_HTTP_REST Instance</Name>
+					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 				</Instance>
 			</Project>
 		</Plc>

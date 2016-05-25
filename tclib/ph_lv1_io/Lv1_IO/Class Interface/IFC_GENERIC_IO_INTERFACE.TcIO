@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <Itf Name="IFC_GENERIC_IO_INTERFACE" Id="{d4f1a39b-b259-4ff6-8356-0516634b13cd}">
+    <Declaration><![CDATA[INTERFACE IFC_GENERIC_IO_INTERFACE
+]]></Declaration>
+    <Method Name="IO_Read" Id="{d22e98f1-6089-48da-b7bb-4953a83235bd}">
+      <Declaration><![CDATA[METHOD IO_Read : RETURN_CODE
+VAR_INPUT
+	CHANNEL : INT;
+	DATA	: POINTER TO LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="IO_TYPE" Id="{493d49a6-e115-46e1-9bf6-394e4a0f4a5c}">
+      <Declaration><![CDATA[PROPERTY IO_TYPE : INT]]></Declaration>
+      <Get Name="Get" Id="{9d6a13f2-22fd-4a8c-b89c-d6c43745464f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="IO_Write" Id="{0c082d8d-3dfa-4e74-a351-3d8ea6097d07}">
+      <Declaration><![CDATA[METHOD IO_Write : RETURN_CODE
+VAR_INPUT
+	CHANNEL : INT;
+	DATA	: LREAL;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

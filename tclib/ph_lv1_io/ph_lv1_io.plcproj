@@ -17,7 +17,7 @@
     <Company>Poh</Company>
     <Released>false</Released>
     <Author>Poh</Author>
-    <DefaultNamespace>ph_lv1</DefaultNamespace>
+    <DefaultNamespace>ph_lv1_io</DefaultNamespace>
     <Title>tclib_ph_lv1_io</Title>
     <ProjectVersion>0.1.1.0</ProjectVersion>
     <!--    <OutputType>Exe</OutputType>
@@ -37,9 +37,6 @@
     <Compile Include="Lv1_IO\Class\C_GenericDigital_2Channel.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Version\Global_Version.TcGVL">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="tclibph_lv0">
@@ -55,8 +52,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -90,13 +87,13 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
   <!-- 

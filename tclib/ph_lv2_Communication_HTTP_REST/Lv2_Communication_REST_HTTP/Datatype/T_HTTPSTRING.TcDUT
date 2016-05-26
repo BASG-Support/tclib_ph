@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="T_HTTPSTRING" Id="{57889142-dfc7-46b1-9e12-e53885e1c224}">
+    <Declaration><![CDATA[TYPE T_HTTPSTRING : STRING(1000); END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -136,13 +136,17 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[ToString := CONCAT(THIS^.Field_Name,
-				CONCAT(SUPER^.Header_Delimiter, 
-					CONCAT(THIS^.Header_Field,
-						SUPER^.Line_Terminator
+        <ST><![CDATA[IF LEN(THIS^.Field_Name) = 0 OR LEN(THIS^.Header_Field) = 9 THEN
+	ToString := '';
+ELSE
+	ToString := CONCAT(THIS^.Field_Name,
+					CONCAT(SUPER^.Header_Delimiter, 
+						CONCAT(THIS^.Header_Field,
+							SUPER^.Line_Terminator
+						)
 					)
-				)
-			);]]></ST>
+				);
+END_IF]]></ST>
       </Implementation>
     </Method>
   </POU>

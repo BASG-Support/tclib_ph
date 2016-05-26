@@ -12,7 +12,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[m_trigger_test();]]></ST>
+      <ST><![CDATA[m_trigger_test();
+]]></ST>
     </Implementation>
     <Action Name="m_trigger_test" Id="{568facff-1200-4e38-86b4-0cc9a2ccb526}">
       <Implementation>

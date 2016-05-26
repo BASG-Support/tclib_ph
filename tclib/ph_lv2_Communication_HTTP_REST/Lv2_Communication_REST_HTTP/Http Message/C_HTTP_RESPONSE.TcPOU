@@ -7,7 +7,13 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	_ResponseCode		: E_HTTP_RESPONSE_CODE;
+	_Url				: STRING(255);	
 	_c_HttpVersion 		: C_HTTP_VERSION(Major_Version:= 1, Minor_Version:= 1);
+	
+	_Header 			: ARRAY[0..15] OF C_HTTP_HEADER(Name:= '');
+	
+	_MessageBody		: T_HTTPSTRING;
 END_VAR
 ]]></Declaration>
     <Implementation>

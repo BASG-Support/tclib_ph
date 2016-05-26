@@ -5,28 +5,10 @@
 VAR
 	_REQUEST : C_HTTP_REQUEST;
 	_STRING : STRING(255);
-	_DEBUG : STRING(5) := 'Hello';
-	_DEBUG_STRING : T_HTTPSTRING;
-	_DEBUG_BYTE	: ARRAY[0..999] OF BYTE;
-	_i, _j : INT;
-	_once : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF NOT _ONCE THEN
-	FOR _i := 0 TO 199 BY 1 DO 
-		IF _i = 199 THEN
-			_DEBUG_STRING := CONCAT(_DEBUG_STRING, 'LAST1');
-		ELSE
-			_DEBUG_STRING := CONCAT(_DEBUG_STRING, _DEBUG);
-		END_IF
-	END_FOR
-	_ONCE := TRUE;
-END_IF
-
-_STRING := _REQUEST.ToString();
-_j := LEN(_DEBUG_STRING);
-MEMCPY(ADR(_DEBUG_BYTE), ADR(_DEBUG_STRING), 1000);]]></ST>
+      <ST><![CDATA[_STRING := _REQUEST.ToString();]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

@@ -109,12 +109,14 @@ VAR_INPUT
 	ENCRYPTED_CONNECTION 	: BOOL := FALSE;
 	ENCRYPTION_128_BITS		: BOOL := FALSE;
 	SERVER_URL 				: STRING(255);
+	OPC_NAMESPACE 				: STRING(255);
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[_ENCRYPTED_CONNECTION 	:= ENCRYPTED_CONNECTION;
 _ENCRYPTION_128_BITS	:= ENCRYPTION_128_BITS;
-_SERVER_URL := SERVER_URL;]]></ST>
+_SERVER_URL := SERVER_URL;
+_NAMESPACE := OPC_NAMESPACE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="Force_Close_Connection" Id="{9ed19c5b-1235-42c6-b953-eed091225547}" FolderPath="Methods\OpcConnection\">

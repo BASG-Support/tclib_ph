@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
   <DUT Name="E_HTTP_VERBS" Id="{865c4851-ff4e-432e-9b24-05545bfe3ae2}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
-{attribute 'strict'}
+//{attribute 'strict'}
 TYPE E_HTTP_VERBS :
 (
 	//USED FOR RETRIEVING INFORMATION
@@ -22,7 +22,7 @@ TYPE E_HTTP_VERBS :
 	//PERFORMS A MESSAGE LOOP BACK TEST ALONG WITH THE PATH TO THE TARGET RESOURCE
 		TRACE,
 	VERB_COUNT
-);
+)DINT;
 END_TYPE
 ]]></Declaration>
   </DUT>

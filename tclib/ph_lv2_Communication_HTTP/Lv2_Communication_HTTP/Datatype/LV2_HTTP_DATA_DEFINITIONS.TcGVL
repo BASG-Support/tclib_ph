@@ -53,6 +53,7 @@ VAR_GLOBAL CONSTANT
 		[
 			'GET',
 			'HEAD',
+			'POST',
 			'PUT',
 			'DELETE',
 			'CONNECT',

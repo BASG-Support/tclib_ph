@@ -41,9 +41,9 @@
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
     </PlaceholderReference>
-    <PlaceholderReference Include="tclib_ph_lv2_http_rest">
-      <DefaultResolution>tclib_ph_lv2_http_rest, * (Poh)</DefaultResolution>
-      <Namespace>ph_lv2_http_rest</Namespace>
+    <PlaceholderReference Include="tclib_ph_lv2_http">
+      <DefaultResolution>tclib_ph_lv2_http, * (Poh)</DefaultResolution>
+      <Namespace>ph_lv2_http</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
@@ -58,8 +58,8 @@
     <PlaceholderResolution Include="tclib_ph_lv1_generic_communication_interface">
       <Resolution>tclib_ph_lv1_generic_communication_interface, 0.1.1.0 (Poh)</Resolution>
     </PlaceholderResolution>
-    <PlaceholderResolution Include="tclib_ph_lv2_http_rest">
-      <Resolution>tclib_ph_lv2_http_rest, * (Poh)</Resolution>
+    <PlaceholderResolution Include="tclib_ph_lv2_http">
+      <Resolution>tclib_ph_lv2_http, * (Poh)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>

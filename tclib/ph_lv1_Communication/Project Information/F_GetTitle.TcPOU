@@ -9,7 +9,7 @@ VAR_INPUT
 	
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[F_GetTitle := "tclib_ph_lv2_http_rest";
+      <ST><![CDATA[F_GetTitle := "tclib_ph_lv2_http";
 ]]></ST>
     </Implementation>
   </POU>

@@ -1791,9 +1791,9 @@ External Setpoint Generation:
 					</TaskPouOids>
 				</Instance>
 			</Project>
-			<Project Disabled="true" GUID="{5B9B6A02-0830-4226-BBDA-A9FE7BDB4FF5}" Name="ph_lv2_Communication_HTTP_REST" PrjFilePath="ph_lv2_Communication_HTTP_REST\ph_lv2_Communication_HTTP_REST.plcproj" TmcFilePath="ph_lv2_Communication_HTTP_REST\ph_lv2_Communication_HTTP_REST.tmc" ReloadTmc="true" AmsPort="857" FileArchiveSettings="#x000e">
+			<Project Disabled="true" GUID="{5B9B6A02-0830-4226-BBDA-A9FE7BDB4FF5}" Name="ph_lv2_Communication_HTTP" PrjFilePath="ph_lv2_Communication_HTTP\ph_lv2_Communication_HTTP.plcProj" TmcFilePath="ph_lv2_Communication_HTTP\ph_lv2_Communication_HTTP.tmc" ReloadTmc="true" AmsPort="857" FileArchiveSettings="#x000e">
 				<Instance Id="#x010100a0" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
-					<Name>ph_lv2_Communication_HTTP_REST Instance</Name>
+					<Name>ph_lv2_Communication_HTTP Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 				</Instance>
 			</Project>
@@ -1807,9 +1807,5 @@ External Setpoint Generation:
 				</Instance>
 			</Project>
 		</Plc>
-		<Io/>
 	</Project>
-	<Mappings>
-		<MappingInfo Identifier="{05000010-0041-0101-1000-040340000101}" Id="#x03070010" Watchdog="14000000040000000400000004000000"/>
-	</Mappings>
 </TcSmProject>

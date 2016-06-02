@@ -3,6 +3,7 @@
   <POU Name="MAIN" Id="{93d97aed-06bb-4f15-b48b-e77cbb41f41e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
+	c_server : C_OPC_DATASERVER;
 	c_client : C_OPC_DATACLIENT(ENCRYPTED_CONNECTION:= FALSE, ENCRYPTION_128_BITS:= FALSE, SERVER_URL:= 'opc.tcp://localhost:4840');
 END_VAR
 ]]></Declaration>

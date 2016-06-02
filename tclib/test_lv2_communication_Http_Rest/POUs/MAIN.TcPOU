@@ -3,12 +3,21 @@
   <POU Name="MAIN" Id="{5aa039c4-acf9-4778-abe4-2f2bcc02fb57}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
+	_VERSION : C_HTTP_VERSION(Major_Version:= 0, Minor_Version:= 0);
 	_REQUEST : C_HTTP_REQUEST;
+	_REQUEST_PARSE : C_HTTP_REQUEST;
+	_RESPONSE : C_HTTP_RESPONSE;
+	_RESPONSE_PARSE : C_HTTP_RESPONSE;
 	_STRING : STRING(255);
+	_STRING_2 : STRING(255);
+	_bool1, _bool2, _bool3 : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[_STRING := _REQUEST.ToString();]]></ST>
+      <ST><![CDATA[_STRING := _REQUEST.ToString();
+_REQUEST_PARSE.Parse('PUT /myUri HTML/1.1$R$NmyHeader: HiHi$R$N$R$NTest this body $R$N');
+_STRING_2 := _RESPONSE.ToString();
+_RESPONSE_PARSE.Parse('HTML/1.1 200 OK$R$NmyHeader: HiHi$R$N$R$NTest this body $R$N');]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

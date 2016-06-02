@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_HTTP_REQUEST" Id="{5aaf8f33-78a8-41e3-a1f3-83656888a26d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_HTTP_REQUEST EXTENDS C_HTTP_BASE
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_MethodRequest		: E_HTTP_VERBS;
+	_Url				: STRING(255);	
+	_c_HttpVersion 		: C_HTTP_VERSION(Major_Version:= 1, Minor_Version:= 1);
+	
+	_Header 			: ARRAY[0.._MaxHeader] OF C_HTTP_HEADER(Name:= '');
+	
+	_MessageBody		: STRING(255);
+END_VAR
+VAR CONSTANT
+	_MaxHeader			: UINT := 15;	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{9321cddf-9f72-48f7-b1a7-a80432ca3e2b}">
+      <Folder Name="Internal" Id="{5617c489-9790-490c-b2d0-698a1084754b}" />
+    </Folder>
+    <Folder Name="Properties" Id="{922f8cdd-ac87-4267-9d42-e1bb879e8e7a}" />
+    <Folder Name="Version" Id="{dcd97dd3-f8e3-4dd8-9437-8284b1479537}" />
+    <Method Name="Get_Headers" Id="{27d98323-943a-4ceb-b1d6-9c47468ef749}" FolderPath="Methods\Internal\">
+      <Declaration><![CDATA[METHOD PRIVATE Get_Headers : STRING(255)
+VAR_INPUT
+END_VAR
+VAR 
+	_m : UINT := 0;
+	_buffer : STRING(255) := '';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR _m := 0 TO _MaxHeader BY 1 DO
+	_buffer := CONCAT(_buffer, THIS^._Header[_m].ToString());
+END_FOR
+Get_Headers := _buffer;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Get_RequestHeader" Id="{166383e2-ee3c-41fa-b767-e7e9b9de0a62}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Get_RequestHeader : RETURN_CODE
+VAR_INPUT
+	INDEX 		: UINT;
+	IN_HEADER 	: POINTER TO C_HTTP_HEADER;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF INDEX > _MaxHeader THEN
+	Get_RequestHeader := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSE
+	IN_HEADER^.Parse(_Header[INDEX].ToString());
+	Get_RequestHeader := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Get_RequestLine" Id="{00a47902-09f4-4462-9b62-6a478b36dffd}" FolderPath="Methods\Internal\">
+      <Declaration><![CDATA[METHOD PRIVATE Get_RequestLine : String(255)
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Get_RequestLine :=	CONCAT(LV2_HTTP_DATA_DEFINITIONS.HTTP_VERB_STRING[THIS^._MethodRequest],
+						CONCAT(SUPER^.Line_Space, 
+							CONCAT(_Url,
+								CONCAT(SUPER^.Line_Space,
+									CONCAT(_c_HttpVersion.ToString(),
+										SUPER^.Line_Terminator
+									)
+								)
+							)
+						)
+					);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Headers_Count" Id="{b23a2eac-acd3-4749-903c-b06d7d4b6be3}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Headers_Count : UINT]]></Declaration>
+      <Get Name="Get" Id="{a19ae42f-3548-4599-bab2-0d667c603cdf}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Headers_Count := _MaxHeader;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Major_Version" Id="{5d4b69ce-8362-49f8-b4b0-9869e8918a1f}" FolderPath="Version\">
+      <Declaration><![CDATA[PROPERTY Major_Version : uint]]></Declaration>
+      <Get Name="Get" Id="{b39c4944-3f87-4491-9fed-53d0e3fd9ec0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Major_Version := _c_HttpVersion.Major;;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Message_Body" Id="{f72234e5-ba85-4c9a-b5ec-f1596c8f1ee1}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Message_Body : STRING(255)]]></Declaration>
+      <Get Name="Get" Id="{af83e74c-6790-4075-ae31-2ac30567af4c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Message_Body := _MessageBody;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8a71a302-29f5-4d39-8cea-5935f366f4f8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_MessageBody := Message_Body;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Minor_Version" Id="{56fb7b69-3012-4101-b607-2307b2a51d27}" FolderPath="Version\">
+      <Declaration><![CDATA[PROPERTY Minor_Version : uint]]></Declaration>
+      <Get Name="Get" Id="{605269c8-09de-434e-ad6f-76adad33e88c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Minor_Version := _c_HttpVersion.Minor;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Parse" Id="{01eb5aa1-30a9-4a5f-bcf1-bfa7d86f8816}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Parse : RETURN_CODE
+VAR_INPUT
+	IN_STRING : STRING(255);
+END_VAR
+VAR
+	_i					: INT;
+	_j					: UINT;
+	_NoBody				: BOOL;
+	_Fragment 			: STRING(255);
+	_SubFragment		: STRING(255);
+	_BodyFragment 		: STRING(255);
+	_HeaderFragment 	: STRING(255);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_i := FIND(IN_STRING, SUPER^.Header_Terminator);
+IF _i <> 0 THEN
+	//Gets the header fragment including a CRLF
+		_HeaderFragment := LEFT(IN_STRING, _i + 1);
+	//Gets the body fragment excluding the front CRLF
+		_BodyFragment := RIGHT(IN_STRING, LEN(IN_STRING) - (_i + 3));
+		IF LEN(_BodyFragment) = 0 THEN
+			MEMSET(ADR(THIS^._MessageBody), 0, SIZEOF(THIS^._MessageBody));
+		ELSE
+			_MessageBody := _BodyFragment;
+		END_IF		
+	//Extract the first line (HTTP request line) without the CRLF
+		_i := FIND(_HeaderFragment, SUPER^.Line_Terminator);
+		_Fragment := LEFT(_HeaderFragment, _i - 1);
+		_HeaderFragment := RIGHT(_HeaderFragment, LEN(_HeaderFragment) - (_i + 1));
+		//HTTP Verb
+			_i := FIND(_FRAGMENT, ' ');
+			_SubFragment := LEFT(_Fragment, _i - 1);
+			_Fragment := RIGHT(_Fragment, LEN(_Fragment) - (_i + 0));
+			IF THIS^.Parse_Verb(_SubFragment) = ph_lv0.LV0_RETURNCODE.RETURN_ERROR THEN
+				Parse := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+			ELSE
+				//URL 
+					_i := FIND(_FRAGMENT, ' ');
+					_SubFragment := LEFT(_Fragment, _i - 1);
+					_Url := _SubFragment;
+				//Version
+					_Fragment := RIGHT(_Fragment, LEN(_Fragment) - (_i + 0));
+					IF THIS^._c_HttpVersion.Parse(_Fragment) = ph_lv0.LV0_RETURNCODE.RETURN_ERROR THEN
+						Parse := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+					ELSE
+						_j := 0;
+						_i := FIND(_HeaderFragment,'$R$N');
+						WHILE _i <> 0 DO
+							_Fragment := LEFT(_HeaderFragment, _i + 1);
+							_HeaderFragment := RIGHT(_HeaderFragment, LEN(_HeaderFragment) - (_i + 1));
+							THIS^._Header[_j].Parse(_Fragment);
+							_j := _j + 1;
+							IF _j > _MaxHeader THEN
+								EXIT;
+							END_IF
+							_i := FIND(_HeaderFragment,'$R$N');
+						END_WHILE
+						Parse := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+					END_IF
+			END_IF
+ELSE
+	//Lack of CRLFCRLF, therefore indicating possible invalid HTTP string
+		Parse := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Parse_Verb" Id="{769958e9-bd00-4665-8aae-fa49fd25fe23}" FolderPath="Methods\Internal\">
+      <Declaration><![CDATA[METHOD Parse_Verb : RETURN_CODE
+VAR_INPUT
+	IN_STRING : STRING(255);
+END_VAR
+VAR
+	_i, _j, _lm, _ln : DINT;
+	_found : BOOL := FALSE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR _i := 0 TO E_HTTP_VERBS.VERB_COUNT - 1 BY 1 DO
+	_ln := LEN(IN_STRING);
+	IF _ln <> LEN(LV2_HTTP_DATA_DEFINITIONS.HTTP_VERB_STRING[_i]) THEN
+		CONTINUE;
+	END_IF
+	_j := MEMCMP(ADR(IN_STRING), ADR(LV2_HTTP_DATA_DEFINITIONS.HTTP_VERB_STRING[_i]), _ln);
+	IF _j = 0 THEN
+		_found := TRUE;
+		_MethodRequest := _i;
+		EXIT;
+	END_IF
+END_FOR
+IF _found THEN
+	Parse_Verb := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Parse_Verb := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Set_RequestHeader" Id="{2df1a225-43dd-4d2a-97e2-3fc0f4d5fa35}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Set_RequestHeader : RETURN_CODE
+VAR_INPUT
+	INDEX 		: UINT;
+	IN_HEADER 	: POINTER TO C_HTTP_HEADER;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF INDEX > _MaxHeader THEN
+	Set_RequestHeader := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSE
+	Set_RequestHeader := _Header[INDEX].Parse(IN_HEADER^.ToString());
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ToString" Id="{761de4c4-a5c1-4c6f-b3e9-de8958253803}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ToString : STRING(255)
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ToString :=	CONCAT(THIS^.Get_RequestLine(),
+				CONCAT(THIS^.Get_Headers(),
+					CONCAT(SUPER^.Line_Terminator,
+						THIS^.Message_Body
+					)
+				)
+			);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Url" Id="{578780b4-7864-4a36-8c28-da2e47140761}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Url : String(255)]]></Declaration>
+      <Get Name="Get" Id="{9b00c056-496a-4b4f-b1c7-c1b12e94dfa8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Url := _url;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{22c218c2-baa9-4c3c-87a5-e310905332d7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_url := url;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Verb" Id="{543ae445-cb7f-4c06-b539-f01e21b8cdda}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Verb : E_HTTP_VERBS]]></Declaration>
+      <Get Name="Get" Id="{55de2d47-f084-4991-ad81-40e8be6663e5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Verb := _MethodRequest;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{1c2d1c25-2220-46da-b634-753fd8aca037}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_MethodRequest := Verb;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+  </POU>
+</TcPlcObject>

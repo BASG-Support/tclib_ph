@@ -66,6 +66,41 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Method Name="Parse" Id="{f70f4b63-b7aa-461f-9c0f-ee6dd25eec59}">
+      <Declaration><![CDATA[(*
+	Y :		M:		D:
+*)
+METHOD Parse : RETURN_CODE
+VAR_INPUT
+	//String with format 'HTML/x.x'
+		IN_STRING : STRING(255);
+END_VAR
+VAR
+	_Fragment 		: STRING(255);
+	_SubFragment 	: STRING(255);
+	_i 				: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_i := FIND(IN_STRING, '/');
+IF _i = 0 THEN
+	Parse := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSE
+	_Fragment := F_ToUCase(_Fragment);
+	_Fragment := RIGHT(IN_STRING, LEN(IN_STRING) - _i);
+	_i := FIND(_Fragment, '.');
+	IF _i = 0 THEN
+		Parse := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	ELSE
+		_SubFragment := RIGHT(_FRAGMENT, LEN(_FRAGMENT) - _i);
+		_Fragment := LEFT(_FRAGMENT, _i - 1);
+		Major := STRING_TO_UINT(_FRAGMENT);
+		Minor := STRING_TO_UINT(_SubFragment);
+		Parse := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ToString" Id="{3fb1ece0-cd07-4895-a40e-68d34fc17c52}">
       <Declaration><![CDATA[METHOD ToString : String(255)
 VAR_INPUT

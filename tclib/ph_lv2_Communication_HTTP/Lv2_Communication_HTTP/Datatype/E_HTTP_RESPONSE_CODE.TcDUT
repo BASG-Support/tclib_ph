@@ -2,7 +2,6 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
   <DUT Name="E_HTTP_RESPONSE_CODE" Id="{8b1e0c6e-d026-4cf3-826a-ad95bf0640d0}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
-{attribute 'strict'}
 TYPE E_HTTP_RESPONSE_CODE :
 (
 	//1xx : INFOMATIONAL

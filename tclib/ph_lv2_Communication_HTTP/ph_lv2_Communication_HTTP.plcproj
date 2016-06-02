@@ -6,7 +6,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5b9b6a02-0830-4226-bbda-a9fe7bdb4ff5}</ProjectGuid>
     <SubObjectsSortedByName>True</SubObjectsSortedByName>
-    <Name>ph_lv2_Communication_HTTP_REST</Name>
+    <Name>ph_lv2_Communication_HTTP</Name>
     <ProgramVersion>3.1.4020.1</ProgramVersion>
     <Application>{54b7ffc5-8280-445d-9a9c-89cf6c51cdf6}</Application>
     <TypeSystem>{0bd89ba7-ab1a-4986-bab0-652e8aedda39}</TypeSystem>
@@ -18,9 +18,9 @@
     <ProjectVersion>0.1.1.0</ProjectVersion>
     <Company>Poh</Company>
     <Author>Poh</Author>
-    <DefaultNamespace>ph_lv2_http_rest</DefaultNamespace>
-    <Title>tclib_ph_lv2_http_rest</Title>
-    <Placeholder>tclib_ph_lv2_http_rest</Placeholder>
+    <DefaultNamespace>ph_lv2_http</DefaultNamespace>
+    <Title>tclib_ph_lv2_http</Title>
+    <Placeholder>tclib_ph_lv2_http</Placeholder>
     <!--    <OutputType>Exe</OutputType>
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>-->
@@ -33,6 +33,10 @@
     <PlaceholderReference Include="Tc2_System">
       <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_System</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_Utilities">
+      <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Utilities</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="tclib_ph_lv0">
       <DefaultResolution>tclib_ph_lv0, * (Poh)</DefaultResolution>
@@ -52,45 +56,45 @@
     </PlaceholderResolution>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Lv2_Communication_REST_HTTP" />
-    <Folder Include="Lv2_Communication_REST_HTTP\Datatype" />
-    <Folder Include="Lv2_Communication_REST_HTTP\Class Component" />
-    <Folder Include="Lv2_Communication_REST_HTTP\Http Message" />
+    <Folder Include="Lv2_Communication_HTTP" />
+    <Folder Include="Lv2_Communication_HTTP\Datatype" />
+    <Folder Include="Lv2_Communication_HTTP\Class Component" />
+    <Folder Include="Lv2_Communication_HTTP\Http Message" />
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Lv2_Communication_REST_HTTP\Class Component\C_HTTP_BASE.TcPOU">
+    <Compile Include="Lv2_Communication_HTTP\Class Component\C_HTTP_BASE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Class Component\C_HTTP_HEADER.TcPOU">
+    <Compile Include="Lv2_Communication_HTTP\Class Component\C_HTTP_HEADER.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Class Component\C_HTTP_VERSION.TcPOU">
+    <Compile Include="Lv2_Communication_HTTP\Class Component\C_HTTP_VERSION.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\C_RESTFUL_CLIENT.TcPOU">
+    <Compile Include="Lv2_Communication_HTTP\C_RESTFUL_CLIENT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\E_HTTP_RESPONSE_CODE.TcDUT">
+    <Compile Include="Lv2_Communication_HTTP\Datatype\E_HTTP_RESPONSE_CODE.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\E_HTTP_STANDARD_HEADERS.TcDUT">
+    <Compile Include="Lv2_Communication_HTTP\Datatype\E_HTTP_STANDARD_HEADERS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\E_HTTP_VERBS.TcDUT">
+    <Compile Include="Lv2_Communication_HTTP\Datatype\E_HTTP_VERBS.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\LV2_HTTP_DATA_DEFINITIONS.TcGVL">
+    <Compile Include="Lv2_Communication_HTTP\Datatype\LV2_HTTP_DATA_DEFINITIONS.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Datatype\T_HTTPSTRING.TcDUT">
+    <Compile Include="Lv2_Communication_HTTP\Datatype\T_HTTPSTRING.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Http Message\C_HTTP_REQUEST.TcPOU">
+    <Compile Include="Lv2_Communication_HTTP\Http Message\C_HTTP_REQUEST.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Lv2_Communication_REST_HTTP\Http Message\C_HTTP_RESPONSE.TcPOU">
+    <Compile Include="Lv2_Communication_HTTP\Http Message\C_HTTP_RESPONSE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Version\Global_Version.TcGVL">
@@ -98,7 +102,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ph_lv2_Communication_HTTP_REST.tmc">
+    <None Include="ph_lv2_Communication_HTTP.tmc">
       <SubType>Content</SubType>
     </None>
   </ItemGroup>

@@ -23,6 +23,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="Header_Terminator" Id="{a88f8f7a-4669-4b1a-9895-7e72f31c7ce6}">
+      <Declaration><![CDATA[PROPERTY Header_Terminator : STRING(4)]]></Declaration>
+      <Get Name="Get" Id="{6d5521dd-ef76-46fe-a9e7-229dca0dd123}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Header_Terminator := '$R$N$R$N';]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="Line_Space" Id="{23e9f583-afef-4949-95f9-9b835024c173}">
       <Declaration><![CDATA[PROPERTY Line_Space : String(1)]]></Declaration>
       <Get Name="Get" Id="{f693bc7d-fa57-46de-b794-7017a3b7fa7f}">
@@ -46,7 +57,7 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Url_Split_Charactor" Id="{bcc3e33d-a2d4-419a-bea0-49952b86deec}">
-      <Declaration><![CDATA[PROPERTY PROTECTED Url_Split_Charactor : STRING(1)]]></Declaration>
+      <Declaration><![CDATA[PROPERTY Url_Split_Charactor : STRING(1)]]></Declaration>
       <Get Name="Get" Id="{a73ed253-cc19-4b50-9830-f2395f2dac63}">
         <Declaration><![CDATA[VAR
 END_VAR

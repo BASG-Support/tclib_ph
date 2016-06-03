@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_ACTUATION_EXT_HOMING" Id="{62088918-25f8-449a-948f-d62393bd2c8b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_ACTUATION_EXT_HOMING EXTENDS C_ACTUATION
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_HardStopCalibration	: BOOL := FALSE;
+	_HardStopTol			: LREAL := 5.0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Homing Properties" Id="{3646a56a-24ea-4e69-9db1-ac91a9ed4989}" />
+    <Folder Name="Methods" Id="{0925be61-b6c1-4054-9923-72b6a8a7094d}" />
+    <Property Name="Calibrate_At_Hardstop" Id="{412a5baf-f17a-40f0-af97-0039df390cf2}" FolderPath="Homing Properties\">
+      <Declaration><![CDATA[PROPERTY Calibrate_At_Hardstop : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ac8e0e82-dcb2-48ed-8573-89499a94a8d6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Calibrate_At_Hardstop := _HardStopCalibration;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{85472196-5565-417c-a8d3-5fe2a67fc4f6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_HardStopCalibration := Calibrate_At_Hardstop;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Hardstop_Tolerance" Id="{822e561a-7843-42be-b6e8-c04f6f6e8e90}" FolderPath="Homing Properties\">
+      <Declaration><![CDATA[PROPERTY Hardstop_Tolerance : LREAL]]></Declaration>
+      <Get Name="Get" Id="{0baa77f0-a0dc-4bc3-9e2f-924e61327bd3}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Hardstop_Tolerance := _HardStopTol;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{1d023def-74b9-4e38-a93c-a9fb27cd61e9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ _HardStopTol := Hardstop_Tolerance;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Home" Id="{0df8e827-fad5-40c8-9f9a-41319b3a55bf}" FolderPath="Methods\">
+      <Declaration><![CDATA[{attribute '''NORMAL__COMMENT' := '
+	Y:2016		M:05	D:20
+	D: Initiates the homing sequence for the actuation device. Configure the homing behavior via the class's properties.
+'}
+(*
+	Y:2016		M:05	D:20
+	D: Initiates the homing sequence for the actuation device. Configure the homing behavior via the class's properties.
+*)
+(*
+	Y:2016		M:06	D:03
+	D: Initiates the homing sequence for the actuation device. Configure the homing behavior via the class's properties.
+	EXT: Uses the Use_Hard_Stop option to calibrate the homing sequence
+*)
+METHOD Home : ph_lv0.RETURN_CODE
+VAR
+	_CALIBRATION_FLAG : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _HardStopCalibration THEN
+	_CALIBRATION_FLAG := ABS(_AXIS.NcToPlc.PosDiff) > _HardStopTol;
+ELSE 
+	IF _HOME_TO_LIMIT THEN
+		IF _HOME_TO_MINUS THEN
+			_CALIBRATION_FLAG := THIS^._HARDWARE_LINK.LIMIT_MINUS;
+		ELSE
+			_CALIBRATION_FLAG := THIS^._HARDWARE_LINK.LIMIT_PLUS;
+		END_IF
+	ELSE
+		_CALIBRATION_FLAG := THIS^._HARDWARE_LINK.CALIBRATION_SENSOR;
+	END_IF
+END_IF
+_M_HOME(
+	Axis:= _AXIS, 
+	Execute:= TRUE, 
+	bCalibrationCam:= _CALIBRATION_FLAG);
+IF _M_HOME.Error THEN
+	_M_HOME(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Home := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSIF _M_HOME.CommandAborted THEN
+	_M_HOME(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Home := ph_lv0.LV0_RETURNCODE.RETURN_ERROR + 1;
+ELSIF _M_HOME.Done THEN
+	_M_HOME(
+		Axis:= _AXIS, 
+		Execute:= FALSE);
+	Home := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+ELSE
+	Home := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

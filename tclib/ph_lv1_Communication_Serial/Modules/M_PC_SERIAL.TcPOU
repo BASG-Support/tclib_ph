@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="M_PC_SERIAL" Id="{f5e93c09-dbcb-4b52-b692-d01ad3f8cd98}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK M_PC_SERIAL Extends C_SerialBase
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	//Hardware Buffers
+		//IN_Hardward_Buffer AT %I*	: EL6inData22B;
+		//OUT_Hardward_Buffer AT %Q*	: EL6outData22B;
+		IN_Hardward_Buffer AT %I*	: PcComInData;
+		OUT_Hardward_Buffer AT %Q* 	: PcComOutData;
+	//Serial FunctionBlocks
+		M_SERIALCONTROLLER : SerialLineControl;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Hardware_Buffer_IO" Id="{b90b786b-dc1a-4857-9573-ca188a3fecf6}">
+      <Declaration><![CDATA[METHOD Hardware_Buffer_IO : Return_Code
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_SERIALCONTROLLER(
+	Mode:= SERIALLINEMODE_PC_COM_PORT, 
+	pComIn:= ADR(IN_Hardward_Buffer), 
+	pComOut:= ADR(OUT_Hardward_Buffer), 
+	SizeComIn:= SIZEOF(IN_Hardward_Buffer), 
+	Error=> , 
+	ErrorID=> , 
+	TxBuffer:= _txBuffer, 
+	RxBuffer:= _rxBuffer);
+IF M_SERIALCONTROLLER.Error THEN
+	_LineError := TRUE;
+ELSE
+	_LineError := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Serial_Line_Error" Id="{a7703809-e8fb-455f-b063-95d8a587ada0}">
+      <Declaration><![CDATA[PROPERTY Serial_Line_Error : BOOL]]></Declaration>
+      <Get Name="Get" Id="{56819383-941b-4107-b0d7-6d45ab2c7d58}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Serial_Line_Error := _LineError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

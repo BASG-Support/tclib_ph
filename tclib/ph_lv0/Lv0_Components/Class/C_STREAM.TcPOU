@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_STREAM" Id="{c1cf2e6f-4fa5-40be-864b-1416c7bf9dd9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_STREAM
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_StreamSize 			: UDINT;
+	_StreamData 			: POINTER TO BYTE;
+	_StreamPointingPosition	: UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{46aaafb3-a16b-41f7-a79e-3c8c0ecccc00}" />
+    <Folder Name="Properties" Id="{942d7cd6-b2ed-4c5e-9ec3-886979f94d6f}" />
+    <Property Name="Base_Data" Id="{812b0840-0317-4a66-9caa-89313ccf2279}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Base_Data : POINTER TO BYTE]]></Declaration>
+      <Get Name="Get" Id="{c4ea9eca-3e62-4db6-b06e-516d1a8a44b2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Base_Data := _StreamData;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ab1a75e4-47ef-45e7-9572-5dd1d6349aa4}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_StreamData := Base_Data;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Clear" Id="{0352787e-3e7e-4348-a536-2eec46de4007}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Clear : RETURN_CODE
+VAR_INPUT
+END_VAR
+VAR
+	_i : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR _i := 0 TO THIS^._StreamSize - 1 BY 1 DO
+	THIS^._StreamData[_i] := 0;
+END_FOR
+_StreamPointingPosition := 0;
+_StreamFilledPosition := 0;
+Clear := LV0_RETURNCODE.RETURN_SUCCESS;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{4564b0d4-7616-4942-806c-632f0bc6a6c1}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Base_Stream : POINTER TO BYTE;
+	Base_StreamSize : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^._StreamData := Base_Stream;
+THIS^._StreamSize := Base_StreamSize;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Peek" Id="{60cc583f-b54c-4415-936b-b28e27f2b7ef}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Peek : Byte
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Peek := _StreamData[_StreamPointingPosition];]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Position" Id="{63440605-4978-4e46-bc46-1817654984f3}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Position : UDINT]]></Declaration>
+      <Get Name="Get" Id="{d2f91ae6-2258-4e8d-86d6-d76738bdbe99}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Position := _StreamPointingPosition;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Read" Id="{251750f6-2b08-427e-843f-80440f6a9c39}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Read : RETURN_CODE
+VAR_INPUT
+	OUT_DATA : POINTER TO BYTE;
+	OUT_SIZE : UDINT;
+END_VAR
+VAR 
+	_i : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _StreamPointingPosition + OUT_SIZE > _StreamSize - 1 THEN
+	Read := LV0_RETURNCODE.RETURN_ERROR;
+	RETURN;
+END_IF
+
+FOR _i := 0 TO OUT_SIZE - 1 BY 1 DO
+	OUT_DATA[_i] := _StreamData[_StreamPointingPosition];
+	_StreamPointingPosition := _StreamPointingPosition + 1;
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Seek" Id="{72fb544b-23ed-4fd8-b822-7fa1fe4362c8}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Seek : RETURN_CODE
+VAR_INPUT
+	Offset 		: UDINT;
+	SeekMode 	: E_SEEK_STYLE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE SeekMode OF
+E_SEEK_STYLE.E_STREAM_BEGIN:
+	IF Offset > _StreamSize - 1 THEN
+		Seek := 1 * LV0_RETURNCODE.RETURN_ERROR;
+		RETURN;
+	END_IF
+	_StreamPointingPosition := Offset;
+E_SEEK_STYLE.E_STREAM_CURRENT:
+	IF _StreamPointingPosition + Offset > _StreamSize - 1 THEN
+		Seek := 2 * LV0_RETURNCODE.RETURN_ERROR;
+		RETURN;
+	END_IF
+	_StreamPointingPosition := _StreamPointingPosition + Offset;
+E_SEEK_STYLE.E_STREAM_END:
+	IF Offset > _StreamSize - 1 THEN
+		Seek := 3 * LV0_RETURNCODE.RETURN_ERROR;
+		RETURN;
+	END_IF
+	_StreamPointingPosition := _StreamSize - 1 - Offset;
+END_CASE
+
+Seek := LV0_RETURNCODE.RETURN_SUCCESS;
+RETURN;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Stream_Size" Id="{be014861-5054-4734-8903-8c6f0dc5436a}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Stream_Size : UDINT]]></Declaration>
+      <Get Name="Get" Id="{a37cb3a3-0f1d-4816-b742-e4547e4fbf8d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Stream_Size := _StreamSize;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{d988c913-4593-4dba-9755-5bd3311a8261}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_StreamSize := Stream_Size;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Write" Id="{96b8978d-69d5-4f46-a02f-704d1b4f201e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Write : RETURN_CODE
+VAR_INPUT
+	IN_DATA : POINTER TO BYTE;
+	IN_SIZE : UDINT;
+END_VAR
+VAR 
+	_i : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _StreamPointingPosition + IN_SIZE > _StreamSize - 1 THEN
+	//Buffer size insufficient.
+		Write := LV0_RETURNCODE.RETURN_ERROR;
+		RETURN;
+END_IF
+
+FOR _i := 0 TO IN_SIZE - 1 BY 1 DO
+	_StreamData[_StreamPointingPosition] := IN_DATA[_i];
+	_StreamPointingPosition := _StreamPointingPosition + 1;
+END_FOR
+
+Write := LV0_RETURNCODE.RETURN_SUCCESS;
+RETURN;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

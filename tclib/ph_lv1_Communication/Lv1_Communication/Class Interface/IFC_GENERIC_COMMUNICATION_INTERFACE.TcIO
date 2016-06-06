@@ -16,7 +16,7 @@ END_VAR
     <Method Name="Create_Handle" Id="{b5d62edb-b21e-47b5-8d80-4bb30decd791}">
       <Declaration><![CDATA[METHOD Create_Handle : RETURN_CODE
 VAR_INPUT
-	Configuration 	: S_GCI_CONFIG;
+	Configuration 	: POINTER TO S_GCI_CONFIG;
 	OUT_HANDLE		: POINTER TO UDINT;
 END_VAR
 ]]></Declaration>
@@ -24,14 +24,14 @@ END_VAR
     <Method Name="Open_Connection" Id="{bd81e16c-fef7-4eee-ac3c-d5841221af71}">
       <Declaration><![CDATA[METHOD Open_Connection : RETURN_CODE
 VAR_INPUT
-	CONNECTION_INFO : S_GCI_CONFIG;
+	CONNECTION_INFO : POINTER TO S_GCI_CONFIG;
 END_VAR
 ]]></Declaration>
     </Method>
     <Method Name="Read" Id="{19c79a54-9157-436c-801e-b935e8fe99d5}">
       <Declaration><![CDATA[METHOD Read : RETURN_CODE
 VAR_INPUT
-	Configuration : S_GCI_CONFIG;
+	Configuration : POINTER TO S_GCI_CONFIG;
 END_VAR
 ]]></Declaration>
     </Method>
@@ -45,7 +45,7 @@ END_VAR
     <Method Name="Write" Id="{548b3c14-dc8d-4a49-ae41-d0957254011e}">
       <Declaration><![CDATA[METHOD Write : RETURN_CODE
 VAR_INPUT
-	Configuration : S_GCI_CONFIG;
+	Configuration : POINTER TO S_GCI_CONFIG;
 END_VAR
 ]]></Declaration>
     </Method>

@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="M_EL6_SERIAL" Id="{d7913f93-3dbb-469e-9dc5-be0540c05df4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK M_EL6_SERIAL IMPLEMENTS IFC_GENERIC_COMMUNICATION_INTERFACE
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	//Hardware Buffers
+		IN_Hardward_Buffer AT %I*	: EL6inData22B;
+		OUT_Hardward_Buffer AT %Q*	: EL6outData22B;
+		//IN_Hardward_Buffer AT %I*	: PcComInData;
+		//OUT_Hardward_Buffer AT %Q* 	: PcComOutData;
+	//Software Buffers
+		_txBuffer : ComBuffer;
+		_rxBuffer : ComBuffer;
+	//Serial Properties
+		_UsePrefix 	: BOOL := FALSE;
+		_UseSuffix 	: BOOL := FALSE;
+		_Prefix		: STRING(5);
+		_Suffix		: STRING(5);
+		_LineError	: BOOL := FALSE;
+	//Serial FunctionBlocks
+		M_RECEIVE	: ReceiveData;
+		M_SEND		: SendData;
+		M_SERIALCONTROLLER : SerialLineControl;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{4badb3e5-319a-4754-b5a9-44eb76f70dd4}">
+      <Folder Name="Generic Interface" Id="{b84fa621-bb52-4ff0-859a-07b997acdcef}" />
+    </Folder>
+    <Method Name="Close_Connection" Id="{881a2dc3-c121-48dd-a1db-15f07fa7e94a}" FolderPath="Methods\Generic Interface\">
+      <Declaration><![CDATA[METHOD Close_Connection : ph_lv0.RETURN_CODE
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Close_Connection := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Create_Handle" Id="{b6efaa31-fd9c-427b-9142-ed9eed5a5fcc}" FolderPath="Methods\Generic Interface\">
+      <Declaration><![CDATA[METHOD Create_Handle : ph_lv0.RETURN_CODE
+VAR_INPUT
+	Configuration	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+	OUT_HANDLE	: POINTER TO UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Create_Handle := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Hardware_Buffer_IO" Id="{23764e00-2150-4f69-9fb8-32517259fcaf}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Hardware_Buffer_IO : Return_Code
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_SERIALCONTROLLER(
+	Mode:= SERIALLINEMODE_EL6_22B, 
+	pComIn:= ADR(IN_Hardward_Buffer), 
+	pComOut:= ADR(OUT_Hardward_Buffer), 
+	SizeComIn:= SIZEOF(IN_Hardward_Buffer), 
+	Error=> , 
+	ErrorID=> , 
+	TxBuffer:= _txBuffer, 
+	RxBuffer:= _rxBuffer);
+IF M_SERIALCONTROLLER.Error THEN
+	_LineError := TRUE;
+ELSE
+	_LineError := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open_Connection" Id="{7c75ab7a-cf3f-4c83-8f51-26ad48474f2c}" FolderPath="Methods\Generic Interface\">
+      <Declaration><![CDATA[METHOD Open_Connection : ph_lv0.RETURN_CODE
+VAR_INPUT
+	CONNECTION_INFO	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _LineError THEN
+	Open_Connection := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSE
+	Open_Connection := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Prefix" Id="{26e32199-7889-4569-beaa-af633856625b}">
+      <Declaration><![CDATA[PROPERTY Prefix : STRING(5)]]></Declaration>
+      <Get Name="Get" Id="{b7fd11f5-2d97-403e-a936-24f93fabf7dc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Prefix := _Prefix;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c752f0d5-bbc8-442e-a3ae-b727f8220f28}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Prefix := Prefix;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Read" Id="{4f9acb4b-09fe-4919-8980-31f43b2b0aa6}" FolderPath="Methods\Generic Interface\">
+      <Declaration><![CDATA[METHOD Read : ph_lv0.RETURN_CODE
+VAR_INPUT
+	Configuration	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _LineError THEN
+	Read := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSE
+	IF _UsePrefix THEN
+		M_RECEIVE.pPrefix := ADR(_Prefix);
+		M_RECEIVE.LenPrefix := INT_TO_BYTE(LEN(_Prefix));
+	ELSE
+		M_RECEIVE.LenPrefix := 0;
+	END_IF
+	IF _UseSuffix THEN
+		M_RECEIVE.pSuffix := ADR(_Suffix);
+		M_RECEIVE.LenSuffix := INT_TO_BYTE(LEN(_Suffix));
+	ELSE
+		M_RECEIVE.LenSuffix := 0;
+	END_IF
+	M_RECEIVE(
+		pReceiveData:= Configuration.P_Data, 
+		SizeReceiveData:= Configuration.Data_Size, 
+		RXbuffer:= _rxBuffer);
+	IF M_RECEIVE.Error THEN
+		Read := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	ELSIF NOT _UseSuffix AND M_RECEIVE.RxTimeout THEN
+		Read := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	ELSIF NOT M_RECEIVE.busy THEN
+		Read := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	ELSE
+		Read := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Release_Handle" Id="{fbc61870-a439-4017-93f5-814c6d613470}" FolderPath="Methods\Generic Interface\">
+      <Declaration><![CDATA[METHOD Release_Handle : ph_lv0.RETURN_CODE
+VAR_INPUT
+	IN_HANDLE	: POINTER TO UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Release_Handle := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Serial_Line_Error" Id="{fb9b637f-d021-45cf-8362-02e18a6080d3}">
+      <Declaration><![CDATA[PROPERTY Serial_Line_Error : BOOL]]></Declaration>
+      <Get Name="Get" Id="{4f5d208a-230a-4d6d-bf42-841ff8eb08ba}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{82605c86-f685-4ab1-8eaf-0ce6789c6be5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Suffix" Id="{4465ef3b-3ca0-4db0-9ecc-2a9ee207cc14}">
+      <Declaration><![CDATA[PROPERTY Suffix : STRING(5)]]></Declaration>
+      <Get Name="Get" Id="{0b8012fa-c158-4362-8d6d-82cec696a455}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Suffix := _Suffix;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{70f2830b-18dd-478e-ae7f-e64f4f77df39}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Suffix := Suffix;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Use_Prefix" Id="{cc26f5d2-c764-417b-8c4a-37a516071961}">
+      <Declaration><![CDATA[PROPERTY Use_Prefix : BOOL]]></Declaration>
+      <Get Name="Get" Id="{9df5d8e3-46ea-4eca-ac02-1925336f4bdb}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Use_Prefix := _UsePrefix;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5ffadeb4-89a6-4eca-8124-aa788e5a31f4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_UsePrefix := Use_Prefix;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Use_Suffix" Id="{46598f32-dfbc-49b5-b617-24cb2f90c498}">
+      <Declaration><![CDATA[PROPERTY Use_Suffix : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c5bc9b28-5230-4d96-9ff5-b2059ac2e4ba}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Use_Suffix := _UseSuffix;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{96a0ff08-6a6c-4ef8-8279-2852241b39ae}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_UseSuffix := Use_Suffix;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="Write" Id="{b2ac8412-10c0-4097-bac9-99f5630bac28}" FolderPath="Methods\Generic Interface\">
+      <Declaration><![CDATA[METHOD Write : ph_lv0.RETURN_CODE
+VAR_INPUT
+	Configuration	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _LineError THEN
+	Write := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSE
+	M_SEND(
+		pSendData:= Configuration.P_Data, 
+		Length:= Configuration.Data_Size, 
+		Busy=> , 
+		Error=> , 
+		TXbuffer:= _txBuffer);
+	IF M_SEND.Error THEN
+		Write := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	ELSIF NOT M_SEND.busy THEN
+		Write := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	ELSE
+		Write := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

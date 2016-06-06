@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="T_SaveSlot" Id="{06cf4727-1aaf-48f4-9aeb-c9375eb66aaa}">
+    <Declaration><![CDATA[TYPE T_SaveSlot : UINT(1..65535); END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

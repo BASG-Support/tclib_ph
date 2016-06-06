@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="S_POSITION3D" Id="{f7e81338-0cae-4d93-aefb-7684ca59a3a1}">
+    <Declaration><![CDATA[TYPE S_POSITION3D EXTENDS S_POSITION2D :
+STRUCT
+	Z : LREAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

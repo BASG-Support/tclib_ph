@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="T_SlotName" Id="{78e4f488-573d-486a-9474-db5f74ea9673}">
+    <Declaration><![CDATA[TYPE T_SlotName : STRING(32); END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

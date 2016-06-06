@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="C_SAVEPOINT_HANDLER" Id="{281dcd15-61f0-41eb-9737-113184272d95}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_SAVEPOINT_HANDLER
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	PTR_SAVEDATA : POINTER TO S_SAVEPOINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Recall_Position_ByName" Id="{79cf952b-a0a1-449f-823b-259dcf1c61ef}">
+      <Declaration><![CDATA[METHOD Recall_Position_ByName : RETURN_CODE
+VAR_INPUT
+	NAME : T_SlotName;
+	POSITION_DATA : POINTER TO S_POSITION3D;
+END_VAR
+VAR 
+	Slot : T_SaveSlot;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF POSITION_DATA = 0 THEN
+	Recall_Position_BySlot := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	RETURN;
+END_IF
+FOR Slot := 1 TO PARAM_MOTION_SAVEPOINT.SUPPORTED_SLOTS BY 1 DO
+	IF LEN(PTR_SAVEDATA[SLOT - 1].NAME) <> LEN(NAME) THEN
+		CONTINUE;
+	END_IF
+	IF MEMCMP(ADR(PTR_SAVEDATA[SLOT-1]),ADR(NAME), LEN(NAME)) = 0 THEN
+		POSITION_DATA := PTR_SAVEDATA[SLOT-1];
+		Recall_Position_BySlot := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+		RETURN;
+	END_IF
+END_FOR
+Recall_Position_BySlot := 2 * ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Recall_Position_BySlot" Id="{5a1f41e6-2f6d-4ad0-ae28-29dc8f824a1d}">
+      <Declaration><![CDATA[METHOD Recall_Position_BySlot : RETURN_CODE
+VAR_INPUT
+	SLOT : T_SaveSlot;
+	POSITION_DATA : POINTER TO S_POSITION3D;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF SLOT < 1 OR SLOT > THIS^.SUPPORTED_SLOT_SIZE THEN
+	Recall_Position_BySlot := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+ELSE
+	IF POSITION_DATA = 0 THEN
+		Recall_Position_BySlot := 2 * ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
+	ELSE
+		POSITION_DATA^ := PTR_SAVEDATA[SLOT - 1];
+		Recall_Position_BySlot := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="SAVED_DATA" Id="{d968bd8f-e26e-4486-8c7a-e56655bb3d1d}">
+      <Declaration><![CDATA[PROPERTY SAVED_DATA : POINTER TO S_SAVEPOINT]]></Declaration>
+      <Get Name="Get" Id="{892932ff-2a2c-414c-9f94-8ae1a6cd24f8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SAVED_DATA := PTR_SAVEDATA;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{6552a8f7-6f94-4f9e-a6da-737325f9e415}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[PTR_SAVEDATA := SAVED_DATA;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="SUPPORTED_SLOT_SIZE" Id="{0748c4dd-0389-43a6-afae-20795c84a705}">
+      <Declaration><![CDATA[PROPERTY SUPPORTED_SLOT_SIZE : DINT]]></Declaration>
+      <Get Name="Get" Id="{1d4890ce-d8de-4f10-8867-5c4393afb355}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[SUPPORTED_SLOT_SIZE := PARAM_MOTION_SAVEPOINT.SUPPORTED_SLOTS;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

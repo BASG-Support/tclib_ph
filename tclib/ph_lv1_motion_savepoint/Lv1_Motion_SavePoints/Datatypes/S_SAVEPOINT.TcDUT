@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <DUT Name="S_SAVEPOINT" Id="{94e11733-8554-4768-ba43-723d28bc1e6b}">
+    <Declaration><![CDATA[TYPE S_SAVEPOINT EXTENDS S_POSITION3D :
+STRUCT
+	NAME : T_SlotName;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -20,6 +20,10 @@ VAR
 		M_RECEIVE	: ReceiveData;
 		M_SEND		: SendData;
 END_VAR
+VAR CONSTANT
+	//Read/Write Buffer Size
+		_BufferSize : UINT := 300;
+END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
@@ -37,7 +41,7 @@ END_VAR
     <Method Name="Create_Handle" Id="{5c43238c-5182-4172-a6d4-8d609bd37e8b}" FolderPath="Methods\Generic Interface\">
       <Declaration><![CDATA[METHOD Create_Handle : ph_lv0.RETURN_CODE
 VAR_INPUT
-	Configuration	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+	Configuration	: POINTER TO S_GCI_CONFIG;
 	OUT_HANDLE	: POINTER TO UDINT;
 END_VAR
 ]]></Declaration>
@@ -48,7 +52,7 @@ END_VAR
     <Method Name="Open_Connection" Id="{157a8617-658c-4205-b0ef-0512c20dc12f}" FolderPath="Methods\Generic Interface\">
       <Declaration><![CDATA[METHOD Open_Connection : ph_lv0.RETURN_CODE
 VAR_INPUT
-	CONNECTION_INFO	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+	CONNECTION_INFO	: POINTER TO S_GCI_CONFIG;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -81,31 +85,33 @@ END_VAR
     <Method Name="Read" Id="{c78c0af4-48ec-469c-8655-581cec063c05}" FolderPath="Methods\Generic Interface\">
       <Declaration><![CDATA[METHOD Read : ph_lv0.RETURN_CODE
 VAR_INPUT
-	Configuration	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
-END_VAR
-]]></Declaration>
+	Configuration	: POINTER TO PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF _UsePrefix THEN
 	M_RECEIVE.pPrefix := ADR(_Prefix);
 	M_RECEIVE.LenPrefix := INT_TO_BYTE(LEN(_Prefix));
 ELSE
+	M_RECEIVE.pPrefix := 0;
 	M_RECEIVE.LenPrefix := 0;
 END_IF
 IF _UseSuffix THEN
 	M_RECEIVE.pSuffix := ADR(_Suffix);
 	M_RECEIVE.LenSuffix := INT_TO_BYTE(LEN(_Suffix));
 ELSE
+	M_RECEIVE.pSuffix := 0;
 	M_RECEIVE.LenSuffix := 0;
 END_IF
+M_RECEIVE.Timeout := T#1S;
 M_RECEIVE(
-	pReceiveData:= Configuration.P_Data, 
-	SizeReceiveData:= Configuration.Data_Size, 
+	pReceiveData:= Configuration^.P_Data, 
+	SizeReceiveData:= Configuration^.Data_Size, 
 	RXbuffer:= _rxBuffer);
 IF M_RECEIVE.Error <> 0 THEN
 	Read := ph_lv0.LV0_RETURNCODE.RETURN_ERROR;
 ELSIF NOT _UseSuffix AND M_RECEIVE.RxTimeout THEN
 	Read := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
-ELSIF NOT M_RECEIVE.busy THEN
+ELSIF M_RECEIVE.DataReceived THEN
 	Read := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;
 ELSE
 	Read := ph_lv0.LV0_RETURNCODE.RETURN_BUSY;
@@ -183,13 +189,12 @@ END_VAR
     <Method Name="Write" Id="{2f829d38-d976-43e9-b060-73d126b75785}" FolderPath="Methods\Generic Interface\">
       <Declaration><![CDATA[METHOD Write : ph_lv0.RETURN_CODE
 VAR_INPUT
-	Configuration	: PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
-END_VAR
-]]></Declaration>
+	Configuration	: POINTER TO PH_LV1_GENERIC_COMMUNICATION_INTERFACE.S_GCI_CONFIG;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[M_SEND(
-	pSendData:= Configuration.P_Data, 
-	Length:= Configuration.Data_Size, 
+	pSendData:= Configuration^.P_Data, 
+	Length:= Configuration^.Data_Size, 
 	Busy=> , 
 	Error=> , 
 	TXbuffer:= _txBuffer);

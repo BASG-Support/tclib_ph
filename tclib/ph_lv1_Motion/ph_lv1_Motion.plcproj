@@ -20,7 +20,7 @@
     <Company>Poh</Company>
     <Placeholder>tclib_ph_lv1_motion</Placeholder>
     <Title>tclib_ph_lv1_motion</Title>
-    <ProjectVersion>0.1.2.0</ProjectVersion>
+    <ProjectVersion>0.1.3.0</ProjectVersion>
     <!--    <OutputType>Exe</OutputType>
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>-->

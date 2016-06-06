@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
-  <POU Name="C_SAVEPOINT_HANDLER" Id="{281dcd15-61f0-41eb-9737-113184272d95}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK C_SAVEPOINT_HANDLER
+  <POU Name="C_SAVEPOINT_RETRIVER" Id="{281dcd15-61f0-41eb-9737-113184272d95}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK C_SAVEPOINT_RETRIVER
 VAR_INPUT
 END_VAR
 VAR_OUTPUT

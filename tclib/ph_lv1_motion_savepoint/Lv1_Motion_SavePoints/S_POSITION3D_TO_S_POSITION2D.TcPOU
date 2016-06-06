@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4019.2">
+  <POU Name="S_POSITION3D_TO_S_POSITION2D" Id="{deef4e32-65bb-40eb-9440-3da9ea46c4c4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION S_POSITION3D_TO_S_POSITION2D : S_POSITION2D
+VAR_INPUT
+	IN_VALUE : S_POSITION2D;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[S_POSITION3D_TO_S_POSITION2D := IN_VALUE;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

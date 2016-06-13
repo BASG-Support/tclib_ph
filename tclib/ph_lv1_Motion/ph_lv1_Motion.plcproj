@@ -56,9 +56,6 @@
     <Compile Include="Lv1_Motion\Interface\IFC_ACTUATION.TcIO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Version\Global_Version.TcGVL">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ph_lv1_Motion.tmc">

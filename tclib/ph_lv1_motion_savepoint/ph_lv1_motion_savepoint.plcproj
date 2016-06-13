@@ -29,6 +29,7 @@
     <Folder Include="Lv1_Motion_SavePoints" />
     <Folder Include="Lv1_Motion_SavePoints\Datatypes" />
     <Folder Include="Lv1_Motion_SavePoints\Global Data" />
+    <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Lv1_Motion_SavePoints\C_SAVEPOINT_RETRIVER.TcPOU">
@@ -58,6 +59,9 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="Lv1_Motion_SavePoints\S_POSITION3D_TO_S_POSITION2D.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Version\Global_Version.TcGVL">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

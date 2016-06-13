@@ -16,6 +16,17 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{db0984ec-abb7-47f0-9af2-a9a0dd131973}" />
     <Folder Name="Properties" Id="{f10153ac-78e0-47cd-a140-91303f7d4cce}" />
+    <Method Name="Clear" Id="{1fce4b95-d2e8-43a8-94a9-560aa60ea90d}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Clear : RETURN_CODE
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[MEMSET(ADR(_FieldName), 0, SIZEOF(_FieldName));
+MEMSET(ADR(_HeaderField), 0, SIZEOF(_HeaderField));
+Clear := ph_lv0.LV0_RETURNCODE.RETURN_SUCCESS;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Equals" Id="{3902d8e9-12a8-4da2-98b3-710cc8dffbd1}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Equals : BOOL
 VAR_INPUT

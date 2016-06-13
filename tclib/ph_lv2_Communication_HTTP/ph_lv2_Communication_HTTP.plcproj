@@ -97,9 +97,6 @@
     <Compile Include="Lv2_Communication_HTTP\Http Message\C_HTTP_RESPONSE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Version\Global_Version.TcGVL">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ph_lv2_Communication_HTTP.tmc">
